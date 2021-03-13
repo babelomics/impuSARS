@@ -3,7 +3,7 @@
 # Input arguments
 function parseArgs(){
 
-        threads=6
+        threads=1
         prefix="sars-cov-2"
 
 	arg=$1

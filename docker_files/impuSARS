@@ -3,7 +3,7 @@
 # Input arguments
 function parseArgs(){
 
-        threads=6
+        threads=1
         prefix="sars-cov-2"
 
 	arg=$1
@@ -105,3 +105,6 @@ done
 echo >&2 "[ impuSARS ] Assigning lineage"
 conda run -n pangolin pangolin ${outpath}/${prefix}.impuSARS.sequence.fa -t ${threads} \
       --outfile ${outpath}/${prefix}.impuSARS.lineage.csv &> /dev/null
+
+chmod 755 ${outpath}/${prefix}.impuSARS.sequence.fa
+chmod 755 ${outpath}/${prefix}.impuSARS.lineage.csv

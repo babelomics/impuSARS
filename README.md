@@ -16,10 +16,9 @@ An all-in script is available for Unix users. You can easily clone this reposito
 ```
 git clone https://github.com/babelomics/impuSARS
 cd impuSARS
-./impusars --infile /path/to/<file_fasta_or_vcf> \
+./impuSARS --infile /path/to/<file_fasta_or_vcf> \
            --outprefix <output_prefix> \
            --threads <num_threads>
-
 ```
 
 where:
@@ -36,7 +35,7 @@ Experienced (or other operating systems) users can also build this image by them
 docker build -t impusars .
 
 # Run docker
-docker run -it --rm -v <input_path>:/data impusars impusars \
+docker run -it --rm -v <input_path>:/data impusars impuSARS \
            --infile /data/<file_fasta_or_vcf>  \
            --outprefix <output_prefix> \
            --threads <num_threads>

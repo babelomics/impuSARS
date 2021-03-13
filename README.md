@@ -69,7 +69,7 @@ An easy example is provided for testing purposes. To run this example you can ju
            --outprefix imputation 
 ```
 
-The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)), which includes several missing regions (Ns) is imputed. impuSARS returns an imputed complete genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
+The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)), which includes several missing regions (Ns), is imputed. impuSARS returns an imputed complete genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
 
 ## <a name="dependencies">Dependencies</a>
 

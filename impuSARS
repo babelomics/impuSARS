@@ -39,8 +39,11 @@ file=`basename $infile`
 
 # Build docker if not available
 if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
-  echo >&2 "[ impuSARS ] Image NOT FOUND! Building image..."
-  docker build -t impusars .
+  echo >&2 "[ impuSARS ] Docker image NOT FOUND!"
+  echo >&2 "[ impuSARS ] Please, install impuSARS image by running"
+  echo >&2 "[ impuSARS ] the following command:"
+  echo >&2 "[ impuSARS ] ./install_impuSARS"
+  exit 1
 fi
 
 # Run docker

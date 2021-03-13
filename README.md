@@ -3,19 +3,30 @@
 This repository contains a novel tool called impuSARS to impute whole genome sequences from partially sequenced SARS-CoV-2 samples. Additionally, impuSARS provides the lineage associated to the imputed sequence.
 
 ## <a name="TOC">Table of content</a>
+ * [Installation](#installation)
  * [Quick start](#quickstart)
  * [Output](#output)
+ * [Example](#example) 
  * [Dependencies](#dependencies)
  * [Version history](#versionhistory)
 
 
-## <a name="quickstart">Quick start</a>
+## <a name="installation">Installation</a>
 
-An all-in script is available for Unix users. You can easily clone this repository and run imputation by executing the following command:
+impuSARS is running in a Docker image. All you need is having Docker installed (See [Dependencies](#dependencies) for details). To install the impuSARS image, run the following command:
 
 ```
 git clone https://github.com/babelomics/impuSARS
 cd impuSARS
+./install_impuSARS
+```
+
+
+## <a name="quickstart">Quick start</a>
+
+An all-in script is available for Unix users. You can easily run imputation by executing the following command:
+
+```
 ./impuSARS --infile /path/to/<file_fasta_or_vcf> \
            --outprefix <output_prefix> \
            --threads <num_threads>
@@ -26,12 +37,11 @@ where:
  * **<output_prefix>**: Prefix given to output files. Output files are generated in the same directory as the input file.
  * **<num_threads>**: Number of CPUs used for imputation.
 
-The first time this script is executed, it will automatically build an impuSARS docker image (it can take a few minutes). All you need is having Docker installed (See [Dependencies](#dependencies) for details). 
 
 Experienced (or other operating systems) users can also build this image by themselves (once the repository has been cloned) and run impuSARS directly from Docker as:
 
 ```
-# Build image (only first use)
+# Build image (only once)
 docker build -t impusars .
 
 # Run docker
@@ -51,6 +61,9 @@ After imputation, impuSARS returns two files:
 
 * **<output_prefix>.impuSARS.sequence.fa**: FASTA file incluiding the whole-genome consensus sequence obtained from imputation.
 * **<output_prefix>.impuSARS.lineage.csv**: Lineage assigned with [Pangolin](https://github.com/cov-lineages/pangolin) to the previously imputed sequence.
+
+## <a name="output">Example</a>
+
 
 
 ## <a name="dependencies">Dependencies</a>

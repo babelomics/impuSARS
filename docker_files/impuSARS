@@ -73,6 +73,11 @@ tabix /tmp/$prevcf
 echo >&2 "[ impuSARS ] Imputing missing variants"
 minimac4  --cpus ${threads} --refHaps /Minimac4/reference/COVID_IMPUTATION_PANEL.v1.0.m3vcf.gz \
           --haps /tmp/$prevcf --minRatio 0.00001 --log --prefix /tmp/${prefix} &> /dev/null
+if error=`grep -1 "ERROR" /tmp/${prefix}.logfile`; then
+   echo >&2 $error
+   echo >&2 "Note: Target does not cover enough genome to get an accurate imputation."
+   exit 1
+fi
 tabix /tmp/${prefix}.dose.vcf.gz
 
 echo >&2 "[ impuSARS ] Joining imputed variants with input"

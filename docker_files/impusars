@@ -1,0 +1,102 @@
+#!/bin/bash -l
+
+# Input arguments
+function parseArgs(){
+
+        threads=6
+        prefix="sars-cov-2"
+
+	arg=$1
+	while [[ "$arg" != "" ]]
+	do
+		case "$1" in
+			"--infile")
+			 shift
+			 infile=$1
+			 #echo '->'$infile
+			 ;;
+                        "--outprefix")
+                         shift
+                         prefix=$1
+                         #echo '->'$prefix
+                         ;;
+                        "--threads")
+                         shift
+                         threads=$1
+                         #echo '->'$threads
+                         ;;
+			*)
+			 echo 'Unknown argument '$1
+			 shift
+		esac
+		shift
+		arg=$1
+	done
+}
+
+
+parseArgs $@
+
+echo >&2 '
+*************************************
+*** RUNNING SARS-CoV-2 IMPUTATION ***
+***         (version v1.0)        ***
+*************************************
+'
+
+# Determine input type
+if [[ $infile == *"vcf"* ]]; then
+
+   vcffile=`echo $infile`
+   tabix $vcffile
+
+elif [[ $infile == *".fa"*  ]]; then
+
+   echo >&2 "[ impuSARS ] Preprocessing FASTA file"
+   vcffile="/tmp/converted.vcf.gz"
+   fasta2vcf --infasta $infile --outvcf $vcffile
+
+else
+
+   echo >&2 "[ERROR] Input format not recognized. Please use a FASTA o VCF file."
+
+fi
+
+outpath=`dirname $infile`
+prevcf="${prefix}.vcf.gz"
+
+echo >&2 "[ impuSARS ] Preparing input for imputation"
+header=`bcftools view -H $vcffile | head -1 | cut -f1`
+bcftools view $vcffile | sed "s/^${header}/X/g" | bcftools view -Oz -o /tmp/$prevcf &> /dev/null
+tabix /tmp/$prevcf
+
+echo >&2 "[ impuSARS ] Imputing missing variants"
+minimac4  --cpus ${threads} --refHaps /Minimac4/reference/COVID_IMPUTATION_PANEL.v1.0.m3vcf.gz \
+          --haps /tmp/$prevcf --minRatio 0.00001 --log --prefix /tmp/${prefix} &> /dev/null
+tabix /tmp/${prefix}.dose.vcf.gz
+
+echo >&2 "[ impuSARS ] Joining imputed variants with input"
+bcftools view /tmp/${prefix}.dose.vcf.gz | grep -v TYPED | \
+    bcftools view -Oz -o /tmp/${prefix}.dose.onlyImputed.vcf.gz
+tabix /tmp/${prefix}.dose.onlyImputed.vcf.gz
+
+bcftools concat /tmp/$prevcf /tmp/${prefix}.dose.onlyImputed.vcf.gz | \
+    bcftools sort -Oz -o /tmp/${prefix}.dose.joined.vcf.gz
+tabix /tmp/${prefix}.dose.joined.vcf.gz
+
+echo >&2 "[ impuSARS ] Postprocessing imputation results"
+bcftools norm -m +both /tmp/${prefix}.dose.joined.vcf.gz | \
+     bcftools norm --check-ref s -f /Minimac4/reference/GISAID_COVID_REFERENCE.v1.0.fasta | \
+     bcftools view -c1 -Oz -o /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
+tabix /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
+
+echo >&2 "[ impuSARS ] Calculating consensus sequence"
+sequences=`bcftools view -h /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | grep CHROM | cut -f10- | tr -s '\t' '\n'`
+for seq in $sequences; do
+   bcftools consensus -s $seq -f /Minimac4/reference/GISAID_COVID_REFERENCE.v1.0.fasta /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | \
+       sed "s/>X/>$seq/g" >> ${outpath}/${prefix}.impuSARS.sequence.fa
+done
+
+echo >&2 "[ impuSARS ] Assigning lineage"
+conda run -n pangolin pangolin ${outpath}/${prefix}.impuSARS.sequence.fa -t ${threads} \
+      --outfile ${outpath}/${prefix}.impuSARS.lineage.csv &> /dev/null

@@ -1,0 +1,57 @@
+#!/bin/bash -l
+
+# Input arguments
+function parseArgs(){
+
+	arg=$1
+	while [[ "$arg" != "" ]]
+	do
+		case "$1" in
+			"--infasta")
+			 shift
+			 infasta=$1
+			 ;;
+                        "--outvcf")
+                         shift
+                         outvcf=$1
+                         ;;
+			*)
+			 echo 'Unknown argument '$1
+			 shift
+		esac
+		shift
+		arg=$1
+	done
+}
+
+
+parseArgs $@
+
+reference="/Minimac4/reference/GISAID_COVID_REFERENCE.v1.0.fasta"
+refN="/Minimac4/reference/REFERENCE_N.fa"
+headers="/Minimac4/reference/VCF_headers.txt"
+
+cat $reference $infasta > /tmp/joined.fa
+muscle -in /tmp/joined.fa -out /tmp/aligned.fa
+
+# Check if gaps in reference and fix
+gaps=`head -500 /tmp/aligned.fa | grep "-" | tr -d '\r\n'`
+falines=500
+if [[ "$gaps" == *"-"* ]]; then
+   mv /tmp/aligned.fa /tmp/prealigned.fa
+   fixFASTA.py --fasta /tmp/prealigned.fa --output /tmp/aligned.fa
+   falines=2
+fi
+
+# Take aligned fasta
+tail -n ${falines} /tmp/aligned.fa | sed 's/-/N/g' > /tmp/aligned_sequence.fa
+
+# Convert to VCF with reference to Ns
+FastaToVCF.py -r $refN /tmp/aligned_sequence.fa /tmp/aligned_sequence.vcf
+cat $headers /tmp/aligned_sequence.vcf | bgzip > /tmp/aligned_sequence.vcf.gz
+tabix /tmp/aligned_sequence.vcf.gz
+
+# Fix reference to real reference once Ns have been discarded
+bcftools norm --check-ref s -f $reference /tmp/aligned_sequence.vcf.gz \
+     -Oz -o $outvcf
+tabix $outvcf

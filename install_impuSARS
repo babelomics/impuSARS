@@ -6,7 +6,7 @@ if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
   docker build -t impusars .
 else
   echo >&2 "[ impuSARS ] impuSARS Docker image has been found locally."
-  echo >&2 "[ impuSARS ] For updates, please remove previous version as: "
-  echo >&2 "[ impuSARS ] > docker rmi impusars:<version> "
+  echo >&2 "[ impuSARS ] For updates, please remove previous version as follows:"
+  echo >&2 "[ impuSARS ] docker rmi impusars:<version> "
 fi
 

@@ -1,0 +1,47 @@
+#!/bin/bash -l
+
+# Input arguments
+function parseArgs(){
+
+        threads=6
+        prefix="sars-cov-2"
+
+	arg=$1
+	while [[ "$arg" != "" ]]
+	do
+		case "$1" in
+			"--infile")
+			 shift
+			 infile=$1
+			 ;;
+                        "--outprefix")
+                         shift
+                         prefix=$1
+                         ;;
+                        "--threads")
+                         shift
+                         threads=$1
+                         ;;
+			*)
+			 echo 'Unknown argument '$1
+			 shift
+		esac
+		shift
+		arg=$1
+	done
+}
+
+parseArgs $@
+
+outpath=`dirname $infile`
+file=`basename $infile`
+
+# Build docker if not available
+if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
+  echo >&2 "[ impuSARS ] Image NOT FOUND! Building image..."
+  docker build -t impusars .
+fi
+
+# Run docker
+docker run -it --rm -v ${outpath}:/data impusars impusars \
+           --infile /data/${file} --outprefix ${prefix} --threads ${threads}

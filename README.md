@@ -1,6 +1,6 @@
 # impuSARS: SARS-CoV-2 Imputation
 
-This repository contains a novel tool called impuSARS to impute whole genome sequences from partially sequenced SARS-CoV-2 samples. Additionally, impuSARS provide the lineage associated to the imputed sequence.
+This repository contains a novel tool called impuSARS to impute whole genome sequences from partially sequenced SARS-CoV-2 samples. Additionally, impuSARS provides the lineage associated to the imputed sequence.
 
 ## <a name="TOC">Table of content</a>
  * [Quick start](#quickstart)
@@ -28,7 +28,7 @@ where:
 
 The first time this script is executed, it will automatically build an impuSARS docker image (it can take a few minutes). All you need is having Docker installed (See [Dependencies](#dependencies) for details). 
 
-Experienced (or other operating systems) users can also build this image by themselves and run impuSARS directly from Docker as:
+Experienced (or other operating systems) users can also build this image by themselves (once the repository has been cloned) and run impuSARS directly from Docker as:
 
 ```
 # Build image (only first use)

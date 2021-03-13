@@ -1,4 +1,4 @@
-# impuSARS: SARS-CoV-2 Imputation
+# impuSARS: SARS-CoV-2 whole-genome Imputation
 
 This repository contains a novel tool called impuSARS to impute whole genome sequences from partially sequenced SARS-CoV-2 samples. Additionally, impuSARS provides the lineage associated to the imputed sequence.
 

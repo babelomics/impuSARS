@@ -47,7 +47,7 @@ COPY ./docker_files/references/GISAID_COVID_REFERENCE.v1.0.fasta ./reference/
 COPY ./docker_files/references/GISAID_COVID_REFERENCE.v1.0.fasta.fai ./reference/
 COPY ./docker_files/references/REFERENCE_N.fa ./reference/
 COPY ./docker_files/references/VCF_headers.txt ./reference/
-COPY ./docker_files/impusars /Minimac4/release-build/
+COPY ./docker_files/impuSARS /Minimac4/release-build/
 COPY ./docker_files/fasta2vcf /Minimac4/release-build/
 COPY ./docker_files/fixFASTA.py /Minimac4/release-build/
 ENV PATH "$PATH:/Minimac4/release-build/"

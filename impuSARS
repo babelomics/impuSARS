@@ -33,7 +33,8 @@ function parseArgs(){
 
 parseArgs $@
 
-outpath=`dirname $infile`
+realp=`realpath $infile`
+outpath=`dirname $realp`
 file=`basename $infile`
 
 # Build docker if not available
@@ -43,5 +44,5 @@ if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
 fi
 
 # Run docker
-docker run -it --rm -v ${outpath}:/data impusars impusars \
+docker run -it --rm -v ${outpath}:/data impusars impuSARS \
            --infile /data/${file} --outprefix ${prefix} --threads ${threads}

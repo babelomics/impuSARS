@@ -31,11 +31,10 @@ An all-in script is available for Unix users. You can easily run imputation by e
            --outprefix <output_prefix> \
            --threads <num_threads>
 ```
-
 where:
  * **<file_fasta_or_vcf>**: both FASTA format or VCF format input are accepted. For FASTA files, unknown regions in the genoma must be masked with Ns. For VCF files, genotypes from both known variants (1) and known reference (0) positions must be included.
  * **<output_prefix>**: Prefix given to output files. Output files are generated in the same directory as the input file.
- * **<num_threads>**: Number of CPUs used for imputation.
+ * **<num_threads>**: (Optional) Number of CPUs used for imputation. Default: 1.
 
 
 Experienced (or other operating systems) users can also build this image by themselves (once the repository has been cloned) and run impuSARS directly from Docker as:
@@ -50,7 +49,6 @@ docker run -it --rm -v <input_path>:/data impusars impuSARS \
            --outprefix <output_prefix> \
            --threads <num_threads>
 ```
-
 where arguments are detailed above and, additionally:
  * **<input_path>**: Directory where input file is located and output files will be generated. This directory will be mounted in the docker instance.
 
@@ -64,7 +62,12 @@ After imputation, impuSARS returns two files:
 
 ## <a name="output">Example</a>
 
+An easy example is provided for testing purposes. To run this example you can just run (after [Installation](#installation)):
 
+```
+./impuSARS --infile example/sequence.fa \
+           --outprefix imputation 
+```
 
 ## <a name="dependencies">Dependencies</a>
 

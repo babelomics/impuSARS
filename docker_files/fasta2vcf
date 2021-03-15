@@ -36,22 +36,25 @@ muscle -in /tmp/joined.fa -out /tmp/aligned.fa
 
 # Check if gaps in reference and fix
 gaps=`head -500 /tmp/aligned.fa | grep "-" | tr -d '\r\n'`
-falines=500
+refline=1
+final=500
 if [[ "$gaps" == *"-"* ]]; then
    mv /tmp/aligned.fa /tmp/prealigned.fa
    fixFASTA.py --fasta /tmp/prealigned.fa --output /tmp/aligned.fa
-   falines=2
+   refline=`grep -n ">X" /tmp/aligned.fa | cut -f1 -d':'`
+   final=$(( refline + 1 ))
 fi
 
-# Take aligned fasta
-tail -n ${falines} /tmp/aligned.fa | sed 's/-/N/g' > /tmp/aligned_sequence.fa
+# Removing reference from alignment and masking
+sed --re "${refline},${final}d" /tmp/aligned.fa > /tmp/aligned_sequence.fa
+sed -i 's/-/N/g' /tmp/aligned_sequence.fa
 
 # Convert to VCF with reference to Ns
-FastaToVCF.py -r $refN /tmp/aligned_sequence.fa /tmp/aligned_sequence.vcf
-cat $headers /tmp/aligned_sequence.vcf | bgzip > /tmp/aligned_sequence.vcf.gz
-tabix /tmp/aligned_sequence.vcf.gz
+FastaToVCF.py -r $refN /tmp/aligned_sequence.fa /tmp/aligned.vcf
+cat $headers /tmp/aligned.vcf | bgzip > /tmp/aligned.vcf.gz
+tabix /tmp/aligned.vcf.gz
 
 # Fix reference to real reference once Ns have been discarded
-bcftools norm --check-ref s -f $reference /tmp/aligned_sequence.vcf.gz \
+bcftools norm --check-ref s -f $reference /tmp/aligned.vcf.gz \
      -Oz -o $outvcf
 tabix $outvcf

@@ -37,6 +37,9 @@ function parseArgs(){
 
 parseArgs $@
 
+reference="/Minimac4/reference/SARS_CoV_2_REFERENCE.v1.0.fasta"
+panel="/Minimac4/reference/SARS_CoV_2_IMPUTATION_PANEL.v1.0.m3vcf.gz"
+
 echo >&2 '
 *************************************
 *** RUNNING SARS-CoV-2 IMPUTATION ***
@@ -71,7 +74,7 @@ bcftools view $vcffile | sed "s/^${header}/X/g" | bcftools view -Oz -o /tmp/$pre
 tabix /tmp/$prevcf
 
 echo >&2 "[ impuSARS ] Imputing missing variants"
-minimac4  --cpus ${threads} --refHaps /Minimac4/reference/COVID_IMPUTATION_PANEL.v1.0.m3vcf.gz \
+minimac4  --cpus ${threads} --refHaps ${panel} \
           --haps /tmp/$prevcf --minRatio 0.00001 --log --prefix /tmp/${prefix} &> /dev/null
 if error=`grep -1 "ERROR" /tmp/${prefix}.logfile`; then
    echo >&2 $error
@@ -91,14 +94,14 @@ tabix /tmp/${prefix}.dose.joined.vcf.gz
 
 echo >&2 "[ impuSARS ] Postprocessing imputation results"
 bcftools norm -m +both /tmp/${prefix}.dose.joined.vcf.gz | \
-     bcftools norm --check-ref s -f /Minimac4/reference/GISAID_COVID_REFERENCE.v1.0.fasta | \
+     bcftools norm --check-ref s -f ${reference} | \
      bcftools view -c1 -Oz -o /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
 tabix /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
 
 echo >&2 "[ impuSARS ] Calculating consensus sequence"
 sequences=`bcftools view -h /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | grep CHROM | cut -f10- | tr -s '\t' '\n'`
 for seq in $sequences; do
-   bcftools consensus -s $seq -f /Minimac4/reference/GISAID_COVID_REFERENCE.v1.0.fasta /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | \
+   bcftools consensus -s $seq -f ${reference} /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | \
        sed "s/>X/>$seq/g" >> ${outpath}/${prefix}.impuSARS.sequence.fa
 done
 

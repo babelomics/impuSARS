@@ -42,9 +42,9 @@ RUN tar xvzf Minimac4-1.0.2.tar.gz
 RUN mv Minimac4-1.0.2 Minimac4
 WORKDIR "/Minimac4"
 RUN bash install.sh
-COPY ./docker_files/references/COVID_IMPUTATION_PANEL.v1.0.m3vcf.gz ./reference/
-COPY ./docker_files/references/GISAID_COVID_REFERENCE.v1.0.fasta ./reference/
-COPY ./docker_files/references/GISAID_COVID_REFERENCE.v1.0.fasta.fai ./reference/
+COPY ./docker_files/references/SARS_CoV_2_IMPUTATION_PANEL.v1.0.m3vcf.gz ./reference/
+COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta ./reference/
+COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta.fai ./reference/
 COPY ./docker_files/references/REFERENCE_N.fa ./reference/
 COPY ./docker_files/references/VCF_headers.txt ./reference/
 COPY ./docker_files/impuSARS /Minimac4/release-build/

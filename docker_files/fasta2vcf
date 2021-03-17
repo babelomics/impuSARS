@@ -27,7 +27,7 @@ function parseArgs(){
 
 parseArgs $@
 
-reference="/Minimac4/reference/GISAID_COVID_REFERENCE.v1.0.fasta"
+reference="/Minimac4/reference/SARS_CoV_2_REFERENCE.v1.0.fasta"
 refN="/Minimac4/reference/REFERENCE_N.fa"
 headers="/Minimac4/reference/VCF_headers.txt"
 

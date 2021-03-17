@@ -61,7 +61,7 @@ RUN mkdir /root/.conda \
 ENV PATH "$PATH:/root/miniconda3/bin"
 RUN conda init bash
 
-RUN git clone https://github.com/cov-lineages/pangolin
+RUN git clone -b v2.3.2 https://github.com/cov-lineages/pangolin
 WORKDIR "/pangolin"
 RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "pangolin", "/bin/bash", "-c"]

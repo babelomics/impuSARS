@@ -76,9 +76,9 @@ The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)), which includes sev
 impuSAR internally uses the following software:
 
  * [BCFTools](https://github.com/samtools/bcftools) (v1.11)
- * [Muscle](https://www.drive5.com/muscle/) (v1.11)
- * [Minimac4](https://github.com/statgen/Minimac4) 
- * [Pangolin](https://github.com/cov-lineages/pangolin) (>=v2.3.2)
+ * [Muscle](https://www.drive5.com/muscle/) (v3.8.31)
+ * [Minimac4](https://github.com/statgen/Minimac4) (v1.0.2)
+ * [Pangolin](https://github.com/cov-lineages/pangolin) (v2.3.2)
 
 However, since impuSARS is encapsulated in a Docker image to facilitate distribution, **only Docker installation is required**. Docker can be downloaded for any operating system at [Get Docker](https://docs.docker.com/get-docker/) 
 

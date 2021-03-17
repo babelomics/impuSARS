@@ -73,7 +73,7 @@ The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)), which includes sev
 
 ## <a name="dependencies">Dependencies</a>
 
-impuSAR internally uses the following software:
+impuSARS internally uses the following software:
 
  * [BCFTools](https://github.com/samtools/bcftools) (v1.11)
  * [Muscle](https://www.drive5.com/muscle/) (v3.8.31)

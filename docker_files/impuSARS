@@ -6,15 +6,15 @@ function parseArgs(){
         threads=1
         prefix="sars-cov-2"
 
-	arg=$1
-	while [[ "$arg" != "" ]]
-	do
-		case "$1" in
-			"--infile")
-			 shift
-			 infile=$1
-			 #echo '->'$infile
-			 ;;
+  arg=$1
+  while [[ "$arg" != "" ]]
+  do
+    case "$1" in
+      "--infile")
+       shift
+       infile=$1
+       #echo '->'$infile
+       ;;
                         "--outprefix")
                          shift
                          prefix=$1
@@ -25,13 +25,13 @@ function parseArgs(){
                          threads=$1
                          #echo '->'$threads
                          ;;
-			*)
-			 echo 'Unknown argument '$1
-			 shift
-		esac
-		shift
-		arg=$1
-	done
+      *)
+       echo 'Unknown argument '$1
+       shift
+    esac
+    shift
+    arg=$1
+  done
 }
 
 
@@ -102,7 +102,14 @@ echo >&2 "[ impuSARS ] Calculating consensus sequence"
 sequences=`bcftools view -h /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | grep CHROM | cut -f10- | tr -s '\t' '\n'`
 for seq in $sequences; do
    bcftools consensus -s $seq -f ${reference} /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | \
-       sed "s/>X/>$seq/g" >> ${outpath}/${prefix}.impuSARS.sequence.fa
+       sed "s/>X/>$seq/g" >> /tmp/${prefix}.imputed.consensus.fa
+
+   # Reformat consensus to keep known sequence from input
+   cat $infile /tmp/${prefix}.imputed.consensus.fa > /tmp/${prefix}.joined.consensus.fa
+   muscle -in /tmp/${prefix}.joined.consensus.fa -out /tmp/${prefix}.aligned.consensus.fa -quiet
+   fixFASTA.py --fasta /tmp/${prefix}.aligned.consensus.fa \
+               --output ${outpath}/${prefix}.impuSARS.sequence.fa \
+               --mode consensus
 done
 
 echo >&2 "[ impuSARS ] Assigning lineage"

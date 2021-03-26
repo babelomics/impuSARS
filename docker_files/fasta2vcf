@@ -32,7 +32,7 @@ refN="/Minimac4/reference/REFERENCE_N.fa"
 headers="/Minimac4/reference/VCF_headers.txt"
 
 cat $reference $infasta > /tmp/joined.fa
-muscle -in /tmp/joined.fa -out /tmp/aligned.fa
+muscle -in /tmp/joined.fa -out /tmp/aligned.fa -quiet
 
 # Check if gaps in reference and fix
 gaps=`head -500 /tmp/aligned.fa | grep "-" | tr -d '\r\n'`

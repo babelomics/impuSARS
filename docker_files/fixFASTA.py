@@ -15,7 +15,7 @@ def main():
     if args.mode == "fasta":
       fix_fasta(args.fasta, args.output)
     elif args.mode == "consensus":
-      fix_consensus(args.fasta, args.output)      
+      fix_consensus(args.fasta, args.output)
 
 def fix_fasta(fasta_name, output):
 
@@ -31,7 +31,7 @@ def fix_fasta(fasta_name, output):
               else:
                  rmseq="".join([char for idx, char in enumerate(seq) if idx in refgaps])
                  if len(rmseq.replace("N","")):
-                    print("[ ERROR ] Nucleotides were removed from consensus sequence")
+                    print("[ Warning ] Nucleotides were temporarily excluded from consensus sequence (insertions)")
               seq = "".join([char for idx, char in enumerate(seq) if idx not in refgaps])
               fasta_dict[header] = seq
               seq=""
@@ -41,7 +41,7 @@ def fix_fasta(fasta_name, output):
 
     rmseq="".join([char for idx, char in enumerate(seq) if idx in refgaps])
     if len(rmseq.replace("N","")):
-       print("[ ERROR ] Nucleotides were removed from consensus sequence")
+       print("[ Warning ] Nucleotides were temporarily excluded from consensus sequence (insertions)")
     seq = "".join([char for idx, char in enumerate(seq) if idx not in refgaps])
     fasta_dict[header] = seq
     with open(output, 'w') as outfasta:

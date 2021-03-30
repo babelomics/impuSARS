@@ -61,8 +61,9 @@ RUN mkdir /root/.conda \
 ENV PATH "$PATH:/root/miniconda3/bin"
 RUN conda init bash
 
-RUN git clone -b v2.3.2 https://github.com/cov-lineages/pangolin
-WORKDIR "/pangolin"
+ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v2.3.5.tar.gz pangolin.tar.gz
+RUN tar xvzf pangolin.tar.gz
+WORKDIR "/pangolin-2.3.5"
 RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "pangolin", "/bin/bash", "-c"]
 RUN python setup.py install

@@ -55,7 +55,6 @@ where arguments are detailed above and, additionally:
 ## <a name="output">Output</a>
 
 After imputation, impuSARS returns two files:
- (i) Whole-genome consensus sequence from imputation ("") and (ii) Assigned lineage for imputed sequence with Pangolin ("<output_prefix>.impuSARS.lineage.csv").
 
 * **<output_prefix>.impuSARS.sequence.fa**: FASTA file incluiding the whole-genome consensus sequence obtained from imputation.
 * **<output_prefix>.impuSARS.lineage.csv**: Lineage assigned with [Pangolin](https://github.com/cov-lineages/pangolin) to the previously imputed sequence.

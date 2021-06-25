@@ -69,14 +69,18 @@ An easy example is provided for testing purposes. To run this example you can ju
            --outprefix imputation 
 ```
 
-The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)) has been internally sequenced and available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882)) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therfore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
+The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)) has been internally sequenced and available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therfore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
 
 ## <a name="output">Data</a>
 
 Nine internally sequenced SARS-CoV-2 samples are available at the following repository for validation purposes:
 
-* **Raw sequencing data and consensus sequences:**: ENA Dataset Accession ID [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882)).
-* **ImpuSARS imputed sequences and lineages:**: Zenodo repository [10.5281/zenodo.4616731](https://doi.org/10.5281/zenodo.4616731)).
+* **Raw sequencing data and consensus sequences:**: [ENA Dataset Accession ID PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882).
+* **ImpuSARS imputed sequences and lineages:**: [Zenodo repository](https://doi.org/10.5281/zenodo.4616731).
+
+Also, impuSARS uses the [hCoV-19/Wuhan/WIV04/2019](https://www.ncbi.nlm.nih.gov/nuccore/MN908947) sequence as the official reference sequence, which is available [here](docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta).
+
+Finally, impuSARS was trained with a reference panel containing 239,301 from [GISAID](https://www.gisaid.org/) (downloaded date January 7, 2021). Therefore, we would like to gratefully acknowledge all those laboratories and contributors that made possible to create such a reference panel ([acknowledgment](acknowledgement/gisaid_hcov-19_acknowledgement_table_2021_04_27_10.pdf)).
 
 ## <a name="dependencies">Dependencies</a>
 

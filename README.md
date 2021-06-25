@@ -6,7 +6,8 @@ This repository contains a novel tool called impuSARS to impute whole genome seq
  * [Installation](#installation)
  * [Quick start](#quickstart)
  * [Output](#output)
- * [Example](#example) 
+ * [Example](#example)
+ * [Data](#data)  
  * [Dependencies](#dependencies)
  * [Version history](#versionhistory)
 
@@ -68,7 +69,14 @@ An easy example is provided for testing purposes. To run this example you can ju
            --outprefix imputation 
 ```
 
-The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)), which includes several missing regions (Ns), is imputed. impuSARS returns an imputed complete genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
+The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)) has been internally sequenced and available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882)) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therfore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
+
+## <a name="output">Data</a>
+
+Nine internally sequenced SARS-CoV-2 samples are available at the following repository for validation purposes:
+
+* **Raw sequencing data and consensus sequences:**: ENA Dataset Accession ID [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882)).
+* **ImpuSARS imputed sequences and lineages:**: Zenodo repository [10.5281/zenodo.4616731](https://doi.org/10.5281/zenodo.4616731)).
 
 ## <a name="dependencies">Dependencies</a>
 

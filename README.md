@@ -9,6 +9,7 @@ This repository contains a novel tool called impuSARS to impute whole genome seq
  * [Example](#example)
  * [Data](#data)  
  * [Dependencies](#dependencies)
+ * [Citation](#citation) 
  * [Version history](#versionhistory)
 
 
@@ -80,7 +81,7 @@ Nine internally sequenced SARS-CoV-2 samples are available at the following repo
 
 Also, impuSARS uses the [hCoV-19/Wuhan/WIV04/2019](https://www.ncbi.nlm.nih.gov/nuccore/MN908947) sequence as the official reference sequence, which is available [here](docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta).
 
-Finally, impuSARS was trained with a reference panel containing 239,301 from [GISAID](https://www.gisaid.org/) (downloaded date January 7, 2021). Therefore, we would like to gratefully acknowledge all those laboratories and contributors that made possible to create such a reference panel ([acknowledgment](acknowledgement/gisaid_hcov-19_acknowledgement_table_2021_04_27_10.pdf)).
+Finally, impuSARS was trained with a reference panel containing 239,301 sequences from [GISAID](https://www.gisaid.org/) (downloaded by January 7, 2021). Therefore, we would like to gratefully acknowledge all those laboratories and sequence contributors that made possible to create such a reference panel ([acknowledgment](acknowledgement/gisaid_hcov-19_acknowledgement_table_2021_04_27_10.pdf)).
 
 ## <a name="dependencies">Dependencies</a>
 
@@ -92,6 +93,12 @@ impuSARS internally uses the following software:
  * [Pangolin](https://github.com/cov-lineages/pangolin) (v2.3.5)
 
 However, since impuSARS is encapsulated in a Docker image to facilitate distribution, **only Docker installation is required**. Docker can be downloaded for any operating system at [Get Docker](https://docs.docker.com/get-docker/) 
+
+## <a name="citation">Citation</a>
+
+The publication for this tools is still under-review. Meanwhile, if you use impuSARS, please cite:
+
+> Francisco M Ortuño, Carlos Loucera, Carlos S. Casimiro-Soriguer, Jose A. Lepe, Pedro Camacho Martinez, Laura Merino Diaz, Adolfo de Salazar, Natalia Chueca, Federico García, Javier Perez-Florido, Joaquin Dopazo. From partial to whole genome imputation of SARS-CoV-2 for epidemiological surveillance; bioRxiv 2021.04.13.439668; doi: [https://doi.org/10.1101/2021.04.13.439668](https://doi.org/10.1101/2021.04.13.439668])
 
 
 ## <a name="versionhistory">Version history</a>

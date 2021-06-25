@@ -96,7 +96,7 @@ However, since impuSARS is encapsulated in a Docker image to facilitate distribu
 
 ## <a name="citation">Citation</a>
 
-The publication for this tools is still under-review. Meanwhile, if you use impuSARS, please cite:
+The publication for this tool is still under-review. Meanwhile, if you use impuSARS, please cite:
 
 > Francisco M Ortuño, Carlos Loucera, Carlos S. Casimiro-Soriguer, Jose A. Lepe, Pedro Camacho Martinez, Laura Merino Diaz, Adolfo de Salazar, Natalia Chueca, Federico García, Javier Perez-Florido, Joaquin Dopazo. From partial to whole genome imputation of SARS-CoV-2 for epidemiological surveillance; bioRxiv 2021.04.13.439668; doi: [https://doi.org/10.1101/2021.04.13.439668](https://doi.org/10.1101/2021.04.13.439668])
 

@@ -70,7 +70,7 @@ An easy example is provided for testing purposes. To run this example you can ju
            --outprefix imputation 
 ```
 
-The SARS-CoV-2 sequence ([sequence.fa](example/sequence.fa)) has been internally sequenced and available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therfore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
+The [example SARS-CoV-2 sequence](example/sequence.fa) has been internally sequenced and is available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therefore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
 
 ## <a name="output">Data</a>
 

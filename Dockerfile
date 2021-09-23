@@ -42,7 +42,7 @@ RUN tar xvzf Minimac4-1.0.2.tar.gz
 RUN mv Minimac4-1.0.2 Minimac4
 WORKDIR "/Minimac4"
 RUN bash install.sh
-COPY ./docker_files/references/SARS_CoV_2_IMPUTATION_PANEL.v1.0.m3vcf.gz ./reference/
+COPY ./docker_files/references/SARS_CoV_2_IMPUTATION_PANEL.v2.1.m3vcf.gz ./reference/
 COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta ./reference/
 COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta.fai ./reference/
 COPY ./docker_files/references/REFERENCE_N.fa ./reference/
@@ -61,9 +61,9 @@ RUN mkdir /root/.conda \
 ENV PATH "$PATH:/root/miniconda3/bin"
 RUN conda init bash
 
-ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v2.3.5.tar.gz pangolin.tar.gz
+ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v3.1.3.tar.gz pangolin.tar.gz
 RUN tar xvzf pangolin.tar.gz
-WORKDIR "/pangolin-2.3.5"
+WORKDIR "/pangolin-3.1.3"
 RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "pangolin", "/bin/bash", "-c"]
 RUN python setup.py install

@@ -81,7 +81,7 @@ Nine internally sequenced SARS-CoV-2 samples are available at the following repo
 
 Also, impuSARS uses the [hCoV-19/Wuhan/WIV04/2019](https://www.ncbi.nlm.nih.gov/nuccore/MN908947) sequence as the official reference sequence, which is available [here](docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta).
 
-Finally, impuSARS was trained with a reference panel containing 239,301 sequences from [GISAID](https://www.gisaid.org/) (downloaded by January 7, 2021). Therefore, we would like to gratefully acknowledge all those laboratories and sequence contributors that made possible to create such a reference panel ([acknowledgment](acknowledgement/gisaid_hcov-19_acknowledgement_table_2021_04_27_10.pdf)).
+Finally, impuSARS was initially trained with a reference panel containing 239,301 sequences from [GISAID](https://www.gisaid.org/) (downloaded by January 7, 2021). Last reference (v2.1) was massively extended to 899,456 sequences (updated by June 17th, 2021). Therefore, we would like to gratefully acknowledge all those laboratories and sequence contributors that made possible to create such a reference panel ([acknowledgment](acknowledgement/gisaid_hcov-19_acknowledgement_table_2021_04_27_10.pdf)).
 
 ## <a name="dependencies">Dependencies</a>
 
@@ -103,5 +103,5 @@ The publication for this tool is still under-review. Meanwhile, if you use impuS
 
 ## <a name="versionhistory">Version history</a>
 
- * V1.0 (2021-03-13): 
-   * first release
+ * V1.0 (2021-03-13): First release
+ * V2.0 (2021-06-17): Reference and pangolin updates.

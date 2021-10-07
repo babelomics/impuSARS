@@ -1,0 +1,101 @@
+#!/bin/bash -l
+
+function parseArgs(){
+
+	genomeFasta="not_provided"
+	unknn="n"
+	threads=1
+
+	arg=$1
+	while [[ "$arg" != "" ]]
+	do
+		case "$1" in
+			"--name")
+			 shift
+			 refname=$1
+			 echo '->'$refname
+			 ;;		 
+			"--input_fasta")
+			 shift
+			 inputFasta=$1
+			 echo '->'$inputFasta
+			 ;;
+			"--genome_fasta")
+			 shift
+			 genomeFasta=$1
+ 			 echo '->'$genomeFasta
+			 ;;
+			"--output_path")
+			 shift
+			 outPath=$1
+ 			 echo '->'$outPath
+			 ;; 
+			"--unknown_nn")
+			 shift
+			 unknn=$1
+ 			 echo '->'$unknn
+			 ;;
+			"--threads")
+			 shift
+			 threads=$1
+ 			 echo '->'$threads
+			 ;;				 	 
+			*)
+			 echo 'Unknown argument '$1
+			 shift
+		esac
+		shift
+		arg=$1
+	done
+}
+
+parseArgs $@
+
+echo >&2 '
+*******************************************
+*** PREPARING CUSTOM IMPUSARS REFERENCE ***
+*******************************************
+'
+
+# Convert fasta to VCF
+echo "Converting FASTA input to VCF....."
+fastaname=`basename $inputFasta`
+sed "s/${unknn}/X/g" $inputFasta > $outPath/tmp.$fastaname
+snp-sites -r -v -b -o $outPath/tmp.${refname}.vcf $outPath/tmp.$fastaname
+sed "s/^1/X/g" $outPath/tmp.${refname}.vcf | sed "s/contig=<ID=1/contig=<ID=X/g" \
+        | sed 's/\.\t\.\tGT/PASS\t\.\tGT/g' > $outPath/tmp.${refname}.fixchrom.vcf
+bgzip $outPath/tmp.${refname}.fixchrom.vcf
+tabix $outPath/tmp.${refname}.fixchrom.vcf.gz
+
+# Normalize and keep only standard nucleotides
+echo "Normalizing to reference....."
+if [[ -f $genomeFasta ]]; then
+   bcftools norm -f ${genomeFasta} -c s $outPath/tmp.${refname}.fixchrom.vcf.gz -Oz -o $outPath/tmp.${refname}.fixref.vcf.gz
+else
+   mv $outPath/tmp.${refname}.vcf.gz $outPath/tmp.${refname}.fixref.vcf.gz
+fi
+
+echo "Removing not standard nucleotides....."
+bcftools norm -m -any $outPath/tmp.${refname}.fixref.vcf.gz | \
+         bcftools view -i 'ALT="A,C,T,G,*"' -Oz -o $outPath/tmp.${refname}.norm.onlyTCGAdel.vcf.gz
+
+# Remove unique variants
+echo "Normalizing to reference....."
+bcftools view -t ^X:1-1 -i 'N_PASS(GT="A")>1' $outPath/tmp.${refname}.norm.onlyTCGAdel.vcf.gz \
+         -Oz -o $outPath/tmp.${refname}.norm.onlyTCGAdel.nonunique.vcf.gz
+
+mv $outPath/tmp.${refname}.norm.onlyTCGAdel.nonunique.vcf.gz $outPath/${refname}.reference.vcf.gz
+rm $outPath/tmp.*
+
+# Add previous reference in REF and ALT columns for indels
+echo "Fixing indels....."
+gunzip $outPath/${refname}.reference.vcf.gz
+fixvcf.py -f ${genomeFasta} $outPath/${refname}.reference.vcf | \
+    bcftools sort -Oz -o $outPath/tmp.${refname}.vcf.gz
+rm $outPath/${refname}.reference.vcf 
+
+# Create M3VCF reference with hyperparameters estimation
+echo "Creating reference with hyper-parameter estimation..."
+Minimac3-omp --refHaps $outPath/tmp.${refname}.vcf.gz --processReference \
+             --prefix $outPath/${refname} --cpus ${threads}
+rm $outPath/tmp.*

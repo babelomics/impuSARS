@@ -67,9 +67,9 @@ RUN mkdir /root/.conda \
 ENV PATH "$PATH:/root/miniconda3/bin"
 RUN conda init bash
 
-ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v3.1.11.tar.gz pangolin.tar.gz
+ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v3.1.14.tar.gz pangolin.tar.gz
 RUN tar xvzf pangolin.tar.gz
-WORKDIR "/pangolin-3.1.11"
+WORKDIR "/pangolin-3.1.14"
 RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "pangolin", "/bin/bash", "-c"]
 RUN python setup.py install

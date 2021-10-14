@@ -3,8 +3,10 @@
 # Input arguments
 function parseArgs(){
 
-        threads=1
-        prefix="sars-cov-2"
+  threads=1
+  prefix="sars-cov-2"
+  reference=""
+  panel=""
 
 	arg=$1
 	while [[ "$arg" != "" ]]
@@ -14,14 +16,22 @@ function parseArgs(){
 			 shift
 			 infile=$1
 			 ;;
-                        "--outprefix")
-                         shift
-                         prefix=$1
-                         ;;
-                        "--threads")
-                         shift
-                         threads=$1
-                         ;;
+      "--outprefix")
+       shift
+       prefix=$1
+       ;;
+      "--reference")
+       shift
+       reference=$1
+       ;;
+      "--panel")
+       shift
+       panel=$1
+       ;;       
+      "--threads")
+       shift
+       threads=$1
+       ;;
 			*)
 			 echo 'Unknown argument '$1
 			 shift
@@ -33,10 +43,6 @@ function parseArgs(){
 
 parseArgs $@
 
-realp=`realpath $infile`
-outpath=`dirname $realp`
-file=`basename $infile`
-
 # Build docker if not available
 if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
   echo >&2 "[ impuSARS ] Docker image NOT FOUND!"
@@ -46,6 +52,28 @@ if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
   exit 1
 fi
 
+realp=`realpath $infile`
+outpath=`dirname $realp`
+file=`basename $infile`
+
+opt_args=""
+mnt_path=""
+if [[ "$reference" != "" ]]; then
+    realref=`realpath $reference`
+    refpath=`dirname $realref`
+    reffile=`basename $reference`
+    mnt_path="${mnt_path} -v ${refpath}:/ref/ "
+    opt_args="${opt_args} --reference /ref/${reffile} "
+fi
+if [[ "$panel" != "" ]]; then
+    realpanel=`realpath $panel`
+    panelpath=`dirname $realpanel`
+    panelfile=`basename $panel`
+    mnt_path="${mnt_path} -v ${panelpath}:/panel/ "
+    opt_args="${opt_args} --panel /panel/${panelfile} "
+fi
+
 # Run docker
-docker run -it --rm -v ${outpath}:/data impusars impuSARS \
-           --infile /data/${file} --outprefix ${prefix} --threads ${threads}
+docker run -it --rm -v ${outpath}:/data impusars impuSARS ${mnt_path} \
+           --infile /data/${file} --outprefix ${prefix} --threads ${threads} \
+           ${opt_args}

@@ -3,8 +3,10 @@
 # Input arguments
 function parseArgs(){
 
-        threads=1
-        prefix="sars-cov-2"
+  threads=1
+  prefix="sars-cov-2"
+  reference="/Minimac4/reference/SARS_CoV_2_REFERENCE.v1.0.fasta"
+  panel="/Minimac4/reference/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz"
 
   arg=$1
   while [[ "$arg" != "" ]]
@@ -13,18 +15,23 @@ function parseArgs(){
       "--infile")
        shift
        infile=$1
-       #echo '->'$infile
        ;;
-                        "--outprefix")
-                         shift
-                         prefix=$1
-                         #echo '->'$prefix
-                         ;;
-                        "--threads")
-                         shift
-                         threads=$1
-                         #echo '->'$threads
-                         ;;
+      "--outprefix")
+       shift
+       prefix=$1
+       ;;
+      "--reference")
+       shift
+       reference=$1
+       ;;
+      "--panel")
+       shift
+       panel=$1
+       ;;              
+      "--threads")
+       shift
+       threads=$1
+       ;;
       *)
        echo 'Unknown argument '$1
        shift
@@ -37,8 +44,6 @@ function parseArgs(){
 
 parseArgs $@
 
-reference="/Minimac4/reference/SARS_CoV_2_REFERENCE.v1.0.fasta"
-panel="/Minimac4/reference/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz"
 version="v1.0"
 verref="v3.0"
 
@@ -66,7 +71,7 @@ elif [[ $infile == *".fa"*  ]]; then
 
    echo >&2 "[ impuSARS ] Preprocessing FASTA file"
    vcffile="/tmp/converted.vcf.gz"
-   fasta2vcf --infasta $infile --outvcf $vcffile
+   fasta2vcf --infasta $infile --outvcf $vcffile --reference ${reference}
 
 else
 

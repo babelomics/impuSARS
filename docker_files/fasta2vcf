@@ -11,10 +11,14 @@ function parseArgs(){
 			 shift
 			 infasta=$1
 			 ;;
-                        "--outvcf")
-                         shift
-                         outvcf=$1
-                         ;;
+            "--outvcf")
+             shift
+             outvcf=$1
+             ;;
+             "--reference")
+             shift
+             reference=$1
+             ;;
 			*)
 			 echo 'Unknown argument '$1
 			 shift
@@ -24,12 +28,13 @@ function parseArgs(){
 	done
 }
 
-
 parseArgs $@
 
-reference="/Minimac4/reference/SARS_CoV_2_REFERENCE.v1.0.fasta"
-refN="/Minimac4/reference/REFERENCE_N.fa"
 headers="/Minimac4/reference/VCF_headers.txt"
+refN="/Minimac4/reference/REFERENCE_N.fa"
+if [[ $reference != *"SARS_CoV_2"* ]]; then
+	sed 's/[A-Za-z]/N/g' ${reference} | sed 's/>N/>X/g' > ${refN}
+fi
 
 cat $reference $infasta > /tmp/joined.fa
 muscle -in /tmp/joined.fa -out /tmp/aligned.fa -quiet

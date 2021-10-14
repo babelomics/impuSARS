@@ -74,6 +74,6 @@ if [[ "$panel" != "" ]]; then
 fi
 
 # Run docker
-docker run -it --rm -v ${outpath}:/data impusars impuSARS ${mnt_path} \
+docker run -it --rm -v ${outpath}:/data ${mnt_path} impusars impuSARS \
            --infile /data/${file} --outprefix ${prefix} --threads ${threads} \
            ${opt_args}

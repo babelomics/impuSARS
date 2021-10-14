@@ -72,6 +72,6 @@ fi
 
 # Run docker
 docker run -it --rm -v ${datapath}:/data -v ${refpath}:/ref -v ${outPath}:/output \
-     impusars impuSARS_reference --name ${refname} \
+     impusars:v3.0 impuSARS_reference --name ${refname} \
            --input_fasta /data/${fasta} --genome_fasta /ref/${reference} \
            --unknown_nn ${unknn} --output_path /output/ --threads ${threads}

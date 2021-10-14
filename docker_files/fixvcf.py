@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env /root/miniconda3/bin/python
 
 import argparse
 import sys
-
 import pysam
 
 

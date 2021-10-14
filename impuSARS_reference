@@ -1,0 +1,77 @@
+#!/bin/bash -l
+
+function parseArgs(){
+
+  genomeFasta="not_provided"
+  unknn="n"
+  threads=1
+
+  arg=$1
+  while [[ "$arg" != "" ]]
+  do
+    case "$1" in
+      "--name")
+       shift
+       refname=$1
+       echo '->'$refname
+       ;;    
+      "--input_fasta")
+       shift
+       inputFasta=$1
+       echo '->'$inputFasta
+       ;;
+      "--genome_fasta")
+       shift
+       genomeFasta=$1
+       echo '->'$genomeFasta
+       ;;
+      "--output_path")
+       shift
+       outPath=$1
+       echo '->'$outPath
+       ;; 
+      "--unknown_nn")
+       shift
+       unknn=$1
+       echo '->'$unknn
+       ;;
+      "--threads")
+       shift
+       threads=$1
+       echo '->'$threads
+       ;;          
+      *)
+       echo 'Unknown argument '$1
+       shift
+    esac
+    shift
+    arg=$1
+  done
+}
+
+parseArgs $@
+
+fasta=`basename $inputFasta`
+reference=`basename $genomeFasta`
+
+realdata=`realpath $inputFasta`
+datapath=`dirname $realdata`
+
+realref=`realpath $genomeFasta`
+refpath=`dirname $realref`
+
+
+# Build docker if not available
+if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
+  echo >&2 "[ impuSARS ] Docker image NOT FOUND!"
+  echo >&2 "[ impuSARS ] Please, install impuSARS image by running"
+  echo >&2 "[ impuSARS ] the following command:"
+  echo >&2 "[ impuSARS ] ./install_impuSARS"
+  exit 1
+fi
+
+# Run docker
+docker run -it --rm -v ${datapath}:/data -v ${refpath}:/ref -v ${outPath}:/output \
+     impusars impuSARS_reference --name ${refname} \
+           --input_fasta /data/${fasta} --genome_fasta /ref/${reference} \
+           --unknown_nn ${unknn} --output_path /output/ --threads ${threads}

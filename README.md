@@ -143,7 +143,7 @@ The publication for this tool is still under-review. Meanwhile, if you use impuS
 ## <a name="versionhistory">Version history</a>
 
  * V1.0 (2021-03-13): First release
- * V2.0 (2021-06-17): Reference and pangolin updates.
- * V2.0 (2021-06-17): Reference and pangolin updates.
+ * V2.0 (2021-06-17): Update reference (v2.1) and pangolin (v3.1.3).
+ * V3.0 (2021-06-17): Update reference (v3.0) and pangolin (v3.1.14). Indels imputation is now included by the new reference.
 
 For additional version details, please go to [Releases](https://github.com/babelomics/impuSARS/releases).

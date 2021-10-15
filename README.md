@@ -7,6 +7,7 @@ This repository contains a novel tool called impuSARS to impute whole genome seq
  * [Quick start](#quickstart)
  * [Output](#output)
  * [Example](#example)
+ * [Panel creation](#reference) 
  * [Data](#data)  
  * [Dependencies](#dependencies)
  * [Citation](#citation) 
@@ -31,13 +32,16 @@ An all-in script is available for Unix users. You can easily run imputation by e
 ```
 ./impuSARS --infile /path/to/<file_fasta_or_vcf> \
            --outprefix <output_prefix> \
-           --threads <num_threads>
+           [--reference <reference_fasta>]
+           [--panel <panel_m3vcf>]
+           [--threads <num_threads>]           
 ```
 where:
  * **<file_fasta_or_vcf>**: both FASTA format or VCF format input are accepted. For FASTA files, unknown regions in the genoma must be masked with Ns. For VCF files, genotypes from both known variants (1) and known reference (0) positions must be included.
  * **<output_prefix>**: Prefix given to output files. Output files are generated in the same directory as the input file.
+ * **<reference_fasta>**: (Optional) FASTA file including reference sequence. If not included, SARS-CoV-2 reference will be considered (Default).
+ * **<panel_m3vcf>**: (Optional) Trained reference panel in M3VCF format for imputation. By default, SARS-CoV-2 reference panel will be considered. Users can create their own reference panel by the [impuSARS_reference](#reference) command.
  * **<num_threads>**: (Optional) Number of CPUs used for imputation. Default: 1.
-
 
 Experienced (or other operating systems) users can also build this image by themselves (once the repository has been cloned) and run impuSARS directly from Docker as:
 
@@ -49,7 +53,9 @@ docker build -t impusars .
 docker run -it --rm -v <input_path>:/data impusars impuSARS \
            --infile /data/<file_fasta_or_vcf>  \
            --outprefix <output_prefix> \
-           --threads <num_threads>
+           [--reference <reference_fasta>]
+           [--panel <panel_m3vcf>]
+           [--threads <num_threads>]  
 ```
 where arguments are detailed above and, additionally:
  * **<input_path>**: Directory where input file is located and output files will be generated. This directory will be mounted in the docker instance.
@@ -71,6 +77,26 @@ An easy example is provided for testing purposes. To run this example you can ju
 ```
 
 The [example SARS-CoV-2 sequence](example/sequence.fa) has been internally sequenced and is available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therefore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
+
+## <a name="panel">Panel creation</a>
+
+impuSARS tool now includes another all-in script for users to create their own reference panel for SARS-CoV-2 or any other viral sequences to impute. Reference panels can be created as follows:
+
+```
+./impuSARS_reference --name <reference_prefix> \
+                     --output_path <output_path> \
+                     --input_fasta <input_fasta> \
+                     --genome_fasta <reference_fasta> \
+                     [--unknown_nn <unknown_nn>]
+                     [--threads <num_threads>]  
+```
+where:
+ * **<output_path>**: Directory where the custom reference panel will be generated.
+ * **<reference_prefix>**: prefix name given to the output reference panel without extension. Output will generate <reference_prefix>.m3vcf.gz reference panel file.
+ * **<input_fasta>**: FASTA file including the alignment of all sequences used to train and generate the reference panel.
+ * **<genome_fasta>**: FASTA file with the reference genome for the virus to impute. For example, [SARS-CoV-2 reference](docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta).
+ * **<unknown_nn>**: (Optional) Special character used in alignment for missing nucleotides, if any. Default: "n".
+ * **<num_threads>**: (Optional) Number of CPUs used for imputation. Default: 1.
 
 ## <a name="output">Data</a>
 
@@ -105,3 +131,6 @@ The publication for this tool is still under-review. Meanwhile, if you use impuS
 
  * V1.0 (2021-03-13): First release
  * V2.0 (2021-06-17): Reference and pangolin updates.
+ * V2.0 (2021-06-17): Reference and pangolin updates.
+
+For additional version details, please go to [Releases](/releases).

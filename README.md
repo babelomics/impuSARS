@@ -109,7 +109,7 @@ docker run -it --rm -v <input_path>:/data -v <ref_path>:/ref -v <output_path>:/o
                           [--unknown_nn ${unknn}] \
                           [--threads ${threads}]
 ```
-where **<input_path>, <ref_path>** refers to directories where <input_fasta> and <genome_fasta> are respectively located whereas **<input_fasta_basename>** and **<genome_fasta_basename>** are the basenames of those files (without path). 
+where **<input_path>, <ref_path>** refer to directories where <input_fasta> and <genome_fasta> are respectively located whereas **<input_fasta_basename>** and **<genome_fasta_basename>** are the basenames of those files (without path). 
 
 ## <a name="output">Data</a>
 
@@ -146,4 +146,4 @@ The publication for this tool is still under-review. Meanwhile, if you use impuS
  * V2.0 (2021-06-17): Reference and pangolin updates.
  * V2.0 (2021-06-17): Reference and pangolin updates.
 
-For additional version details, please go to [Releases](/releases).
+For additional version details, please go to [Releases](https://github.com/babelomics/impuSARS/releases).

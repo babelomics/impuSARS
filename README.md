@@ -7,7 +7,7 @@ This repository contains a novel tool called impuSARS to impute whole genome seq
  * [Quick start](#quickstart)
  * [Output](#output)
  * [Example](#example)
- * [Panel creation](#reference) 
+ * [Panel creation](#panel) 
  * [Data](#data)  
  * [Dependencies](#dependencies)
  * [Citation](#citation) 
@@ -97,6 +97,19 @@ where:
  * **<genome_fasta>**: FASTA file with the reference genome for the virus to impute. For example, [SARS-CoV-2 reference](docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta).
  * **<unknown_nn>**: (Optional) Special character used in alignment for missing nucleotides, if any. Default: "n".
  * **<num_threads>**: (Optional) Number of CPUs used for imputation. Default: 1.
+
+As before, experienced users can run the script directly using Docker as:
+
+```
+docker run -it --rm -v <input_path>:/data -v <ref_path>:/ref -v <output_path>:/output impusars \
+       impuSARS_reference --name <reference_prefix> \
+                          --output_path /output/ \
+                          --input_fasta /data/<input_fasta_basename> \
+                          --genome_fasta /ref/<genome_fasta_basename> \
+                          [--unknown_nn ${unknn}] \
+                          [--threads ${threads}]
+```
+where **<input_path>, <ref_path>** refers to directories where <input_fasta> and <genome_fasta> are respectively located whereas **<input_fasta_basename>** and **<genome_fasta_basename>** are the basenames of those files (without path). 
 
 ## <a name="output">Data</a>
 

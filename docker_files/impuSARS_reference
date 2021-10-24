@@ -70,7 +70,10 @@ tabix $outPath/tmp.${refname}.fixchrom.vcf.gz
 # Normalize and keep only standard nucleotides
 echo "Normalizing to reference....."
 if [[ -f $genomeFasta ]]; then
-   bcftools norm -f ${genomeFasta} -c s $outPath/tmp.${refname}.fixchrom.vcf.gz -Oz -o $outPath/tmp.${refname}.fixref.vcf.gz
+   sed "s/^>.*/>X/g" $genomeFasta > $outPath/tmp.genome.fa
+   genomeFasta="$outPath/tmp.genome.fa"
+   bcftools norm -f $genomeFasta -c s $outPath/tmp.${refname}.fixchrom.vcf.gz \
+            -Oz -o $outPath/tmp.${refname}.fixref.vcf.gz
 else
    mv $outPath/tmp.${refname}.vcf.gz $outPath/tmp.${refname}.fixref.vcf.gz
 fi
@@ -85,7 +88,6 @@ bcftools view -t ^X:1-1 -i 'N_PASS(GT="A")>1' $outPath/tmp.${refname}.norm.onlyT
          -Oz -o $outPath/tmp.${refname}.norm.onlyTCGAdel.nonunique.vcf.gz
 
 mv $outPath/tmp.${refname}.norm.onlyTCGAdel.nonunique.vcf.gz $outPath/${refname}.reference.vcf.gz
-rm $outPath/tmp.*
 
 # Add previous reference in REF and ALT columns for indels
 echo "Fixing indels....."

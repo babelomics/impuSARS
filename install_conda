@@ -45,6 +45,8 @@ conda config --add channels conda-forge
 echo "Creating impusars conda environment..."
 conda env create -p ${DIR_PATH}/.venvs/impusars -f ${DIR_PATH}/conda/environment.yml
 conda config --append envs_dirs ${DIR_PATH}/.venvs/
+export PATH="$PATH:${DIR_PATH}/.miniconda/bin/"
+echo "export LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:${DIR_PATH}/.venvs/impusars/lib/\"" >> ~/.bashrc
 
 # Update aliases and pip package
 eval "$(conda shell.bash hook)"
@@ -63,7 +65,7 @@ if [[ "$dwnld_cmd" == "curl" ]]; then
 	curl https://codeload.github.com/statgen/Minimac4/tar.gz/refs/tags/v1.0.2 > $DIR_PATH/conda/Minimac4-1.0.2.tar.gz
 	curl ftp://share.sph.umich.edu/minimac3/Minimac3Executable.tar.gz > $DIR_PATH/conda/Minimac3Executable.tar.gz
 elif [[ "$dwnld_cmd" == "wget" ]]; then
-	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $DIR_PATH/conda/Minimac4-1.0.2.tar.gz
+	wget https://codeload.github.com/statgen/Minimac4/tar.gz/refs/tags/v1.0.2 -O $DIR_PATH/conda/Minimac4-1.0.2.tar.gz
     wget ftp://share.sph.umich.edu/minimac3/Minimac3Executable.tar.gz -O $DIR_PATH/conda/Minimac3Executable.tar.gz
 fi
 tar xvzf $DIR_PATH/conda/Minimac4-1.0.2.tar.gz -C $DIR_PATH/conda/

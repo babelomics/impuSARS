@@ -16,14 +16,14 @@ This repository contains a novel tool called impuSARS to impute whole genome seq
 
 ## <a name="installation">Installation</a>
 
-impuSARS is running in a Docker image. All you need is having Docker installed (See [Dependencies](#dependencies) for details). To install the impuSARS image, run the following command:
+impuSARS has two running modes: (i) Docker image or (ii) conda environment. In the first case, all you need is having Docker installed. For conda enviroment, you will need having conda and curl/wget installed (See [Dependencies](#dependencies) for details). In any case, impuSARS can be easily installed by running the following command:
 
 ```
 git clone https://github.com/babelomics/impuSARS
 cd impuSARS
-./install_impuSARS
+./install_impuSARS --mode <docker/conda>
 ```
-
+where `--mode` can take the values **docker** or **conda** depending on your preferences.
 
 ## <a name="quickstart">Quick start</a>
 
@@ -131,7 +131,10 @@ impuSARS internally uses the following software:
  * [Minimac4](https://github.com/statgen/Minimac4) (v1.0.2)
  * [Pangolin](https://github.com/cov-lineages/pangolin) (v3.1.3)
 
-However, since impuSARS is encapsulated in a Docker image to facilitate distribution, **only Docker installation is required**. Docker can be downloaded for any operating system at [Get Docker](https://docs.docker.com/get-docker/) 
+Since impuSARS is encapsulated in a Docker image to facilitate distribution, **only Docker installation is required**. Docker can be downloaded for any operating system at [Get Docker](https://docs.docker.com/get-docker/). In case **conda installation** is preferred, please note that two command packages are required:
+
+ * [Conda](https://docs.conda.io/en/latest/) 
+ * **curl** or **wget** for downloading dependencies.
 
 ## <a name="citation">Citation</a>
 

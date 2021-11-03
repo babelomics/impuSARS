@@ -27,6 +27,8 @@ where `--mode` can take the values **docker** or **conda** depending on your pre
 
 ## <a name="quickstart">Quick start</a>
 
+### Docker mode
+
 An all-in script is available for Unix users. You can easily run imputation by executing the following command:
 
 ```
@@ -59,6 +61,20 @@ docker run -it --rm -v <input_path>:/data impusars impuSARS \
 ```
 where arguments are detailed above and, additionally:
  * **<input_path>**: Directory where input file is located and output files will be generated. This directory will be mounted in the docker instance.
+
+### Conda mode
+
+Similarly to docker, users prefering conda installation can run impuSARS as:
+
+```
+conda activate impusars
+impuSARS --infile /path/to/<file_fasta_or_vcf> \
+         --outprefix <output_prefix> \
+         [--reference <reference_fasta>]
+         [--panel <panel_m3vcf>]
+         [--threads <num_threads>]           
+```
+where arguments are equivalent to Docker mode.
 
 ## <a name="output">Output</a>
 

@@ -1,12 +1,16 @@
 #!/bin/bash -l
 
+SCRIPT_PATH=`readlink -f $0`
+DIR_PATH=`dirname $SCRIPT_PATH`
+
 # Input arguments
 function parseArgs(){
 
   threads=1
   prefix="sars-cov-2"
-  reference="/Minimac4/reference/SARS_CoV_2_REFERENCE.v1.0.fasta"
-  panel="/Minimac4/reference/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz"
+  reference="$DIR_PATH/references/SARS_CoV_2_REFERENCE.v1.0.fasta"
+  panel="$DIR_PATH/references/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz"
+  showver="false"
 
   arg=$1
   while [[ "$arg" != "" ]]
@@ -32,6 +36,11 @@ function parseArgs(){
        shift
        threads=$1
        ;;
+       "--version")
+       shift
+       showver="true"
+       #echo '->'$threads
+       ;;  
       *)
        echo 'Unknown argument '$1
        shift

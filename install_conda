@@ -32,6 +32,7 @@ if [[ "$conda_cmd" == "" ]]; then
 	chmod 755 $DIR_PATH/conda/Miniconda3-latest-Linux-x86_64.sh
 	${DIR_PATH}/conda/Miniconda3-latest-Linux-x86_64.sh -b -p ${DIR_PATH}/.miniconda/
 	export PATH="$PATH:${DIR_PATH}/.miniconda/bin/"
+	echo "export PATH=\"$PATH:${DIR_PATH}/.miniconda/bin/\"" >> ~/.bashrc
 
 fi
 

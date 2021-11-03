@@ -37,7 +37,7 @@ RUN make install
 RUN rm /htslib-1.11.tar.bz2
 
 WORKDIR "/"
-ADD https://github.com/statgen/Minimac4/archive/v1.0.2.tar.gz Minimac4-1.0.2.tar.gz 
+ADD https://codeload.github.com/statgen/Minimac4/tar.gz/refs/tags/v1.0.2 Minimac4-1.0.2.tar.gz
 RUN tar xvzf Minimac4-1.0.2.tar.gz
 RUN mv Minimac4-1.0.2 Minimac4
 WORKDIR "/Minimac4"
@@ -45,11 +45,11 @@ RUN bash install.sh
 RUN curl ftp://share.sph.umich.edu/minimac3/Minimac3Executable.tar.gz -o Minimac3Executable.tar.gz
 RUN tar xvzf Minimac3Executable.tar.gz
 
-COPY ./docker_files/references/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz ./reference/
-COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta ./reference/
-COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta.fai ./reference/
-COPY ./docker_files/references/REFERENCE_N.fa ./reference/
-COPY ./docker_files/references/VCF_headers.txt ./reference/
+COPY ./docker_files/references/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz ./references/
+COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta ./references/
+COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta.fai ./references/
+COPY ./docker_files/references/REFERENCE_N.fa ./references/
+COPY ./docker_files/references/VCF_headers.txt ./references/
 COPY ./docker_files/impuSARS /Minimac4/release-build/
 COPY ./docker_files/fasta2vcf /Minimac4/release-build/
 COPY ./docker_files/fixFASTA.py /Minimac4/release-build/

@@ -1,0 +1,73 @@
+#!/bin/bash -l
+
+SCRIPT_PATH=`readlink -f $0`
+DIR_PATH=`dirname $SCRIPT_PATH`
+
+# Check download command
+curl_cmd=`which curl`
+wget_cmd=`which wget`
+if [[ "$curl_cmd" != "" ]]; then
+	dwnld_cmd="curl"
+elif [[ "$wget_cmd" != "" ]]; then
+	dwnld_cmd="wget"
+else
+	echo "ERROR: No download command found! Please install \"curl\" or \"wget\" commands."
+	exit 1
+fi
+
+# Check if conda installed
+echo "Checking if conda installed..."
+conda_cmd=`which conda`
+if [[ "$conda_cmd" == "" ]]; then 
+	echo "NOT INSTALLED! Installing Miniconda3..."
+	
+	# Download installation script
+	if [[ "$dwnld_cmd" == "curl" ]]; then
+		curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > $DIR_PATH/conda/Miniconda3-latest-Linux-x86_64.sh
+	elif [[ "$dwnld_cmd" == "wget" ]]; then
+		wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $DIR_PATH/conda/Miniconda3-latest-Linux-x86_64.sh
+	fi
+
+	# Install miniconda
+	chmod 755 $DIR_PATH/conda/Miniconda3-latest-Linux-x86_64.sh
+	${DIR_PATH}/conda/Miniconda3-latest-Linux-x86_64.sh -b -p ${DIR_PATH}/.miniconda/
+	export PATH="$PATH:${DIR_PATH}/.miniconda/bin/"
+
+fi
+
+# Add channels to conda
+echo "Adding bioconda/conda-forge channels to conda..."
+conda config --add channels bioconda
+conda config --add channels conda-forge
+
+# Create conda enviroment for impusars
+echo "Creating impusars conda environment..."
+conda env create -p ${DIR_PATH}/.venvs/impusars -f ${DIR_PATH}/conda/environment.yml
+conda config --append envs_dirs ${DIR_PATH}/.venvs/
+
+# Update aliases and pip package
+eval "$(conda shell.bash hook)"
+conda activate impusars
+ln -s $CONDA_PREFIX/bin/x86_64-conda-linux-gnu-gcc $CONDA_PREFIX/bin/gcc
+ln -s $CONDA_PREFIX/bin/x86_64-conda-linux-gnu-g++ $CONDA_PREFIX/bin/g++
+ln -s $CONDA_PREFIX/bin/x86_64-conda-linux-gnu-ar $CONDA_PREFIX/bin/ar
+
+# Copy scripts to enviroment path
+cp -r $DIR_PATH/docker_files/* $CONDA_PREFIX/bin/
+cp -r $DIR_PATH/docker_files/references/ $CONDA_PREFIX/bin/
+
+# Installing Minimac imputation
+echo "Installing Minimac imputation..."
+if [[ "$dwnld_cmd" == "curl" ]]; then
+	curl https://codeload.github.com/statgen/Minimac4/tar.gz/refs/tags/v1.0.2 > $DIR_PATH/conda/Minimac4-1.0.2.tar.gz
+	curl ftp://share.sph.umich.edu/minimac3/Minimac3Executable.tar.gz > $DIR_PATH/conda/Minimac3Executable.tar.gz
+elif [[ "$dwnld_cmd" == "wget" ]]; then
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $DIR_PATH/conda/Minimac4-1.0.2.tar.gz
+    wget ftp://share.sph.umich.edu/minimac3/Minimac3Executable.tar.gz -O $DIR_PATH/conda/Minimac3Executable.tar.gz
+fi
+tar xvzf $DIR_PATH/conda/Minimac4-1.0.2.tar.gz -C $DIR_PATH/conda/
+tar xvzf $DIR_PATH/conda/Minimac3Executable.tar.gz -C $DIR_PATH/conda/
+cd $DIR_PATH/conda/Minimac4-1.0.2/
+bash install.sh
+cp $DIR_PATH/conda/Minimac4-1.0.2/release-build/minimac4 $CONDA_PREFIX/bin/
+cp $DIR_PATH/conda/Minimac3Executable/bin/Minimac3* $CONDA_PREFIX/bin/

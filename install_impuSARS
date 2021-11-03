@@ -1,12 +1,46 @@
 #!/bin/bash -l
 
-# Build docker if not available
-if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
-  echo >&2 "[ impuSARS ] Building impuSARS Docker image..."
-  docker build -t impusars .
-else
-  echo >&2 "[ impuSARS ] impuSARS Docker image has been found locally."
-  echo >&2 "[ impuSARS ] For updates, please remove previous version as follows:"
-  echo >&2 "[ impuSARS ] docker rmi impusars:<version> "
-fi
+SCRIPT_PATH=`readlink -f $0`
+DIR_PATH=`dirname $SCRIPT_PATH`
 
+# Input arguments
+function parseArgs(){
+
+  mode="docker"
+
+	arg=$1
+	while [[ "$arg" != "" ]]
+	do
+		case "$1" in
+			"--mode")
+			 shift
+			 mode=$1
+			 ;;
+			*)
+			 echo 'Unknown argument '$1
+			 shift
+		esac
+		shift
+		arg=$1
+	done
+}
+
+parseArgs $@
+
+if [[ "$mode" == "docker" ]]; then
+
+	# Build docker if not available
+	if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
+	  echo >&2 "[ impuSARS ] Building impuSARS Docker image..."
+	  docker build -t impusars .
+	else
+	  echo >&2 "[ impuSARS ] impuSARS Docker image has been found locally."
+	  echo >&2 "[ impuSARS ] For updates, please remove previous version as follows:"
+	  echo >&2 "[ impuSARS ] docker rmi impusars:<version> "
+	fi
+
+elif [[ "$mode" == "conda" ]]; then
+
+	# Install
+	$DIR_PATH/install_conda
+fi

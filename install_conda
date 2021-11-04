@@ -45,8 +45,6 @@ conda config --add channels conda-forge
 echo "Creating impusars conda environment..."
 conda env create -p ${DIR_PATH}/.venvs/impusars -f ${DIR_PATH}/conda/environment.yml
 conda config --append envs_dirs ${DIR_PATH}/.venvs/
-export PATH="$PATH:${DIR_PATH}/.miniconda/bin/"
-echo "export LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:${DIR_PATH}/.venvs/impusars/lib/\"" >> ~/.bashrc
 
 # Update aliases and pip package
 eval "$(conda shell.bash hook)"

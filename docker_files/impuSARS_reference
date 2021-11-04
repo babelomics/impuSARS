@@ -51,6 +51,8 @@ function parseArgs(){
 
 parseArgs $@
 
+LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/"
+
 echo >&2 '
 *******************************************
 *** PREPARING CUSTOM IMPUSARS REFERENCE ***

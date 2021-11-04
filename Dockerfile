@@ -45,11 +45,11 @@ RUN bash install.sh
 RUN curl ftp://share.sph.umich.edu/minimac3/Minimac3Executable.tar.gz -o Minimac3Executable.tar.gz
 RUN tar xvzf Minimac3Executable.tar.gz
 
-COPY ./docker_files/references/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz ./references/
-COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta ./references/
-COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta.fai ./references/
-COPY ./docker_files/references/REFERENCE_N.fa ./references/
-COPY ./docker_files/references/VCF_headers.txt ./references/
+COPY ./docker_files/references/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz /Minimac4/release-build/references/
+COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta /Minimac4/release-build/references/
+COPY ./docker_files/references/SARS_CoV_2_REFERENCE.v1.0.fasta.fai /Minimac4/release-build/references/
+COPY ./docker_files/references/REFERENCE_N.fa /Minimac4/release-build/references/
+COPY ./docker_files/references/VCF_headers.txt /Minimac4/release-build/references/
 COPY ./docker_files/impuSARS /Minimac4/release-build/
 COPY ./docker_files/fasta2vcf /Minimac4/release-build/
 COPY ./docker_files/fixFASTA.py /Minimac4/release-build/
@@ -70,8 +70,9 @@ RUN conda init bash
 ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v3.1.14.tar.gz pangolin.tar.gz
 RUN tar xvzf pangolin.tar.gz
 WORKDIR "/pangolin-3.1.14"
+RUN sed -i "s/name: pangolin/name: impusars/g" environment.yml
 RUN conda env create -f environment.yml
-SHELL ["conda", "run", "-n", "pangolin", "/bin/bash", "-c"]
+SHELL ["conda", "run", "-n", "impusars", "/bin/bash", "-c"]
 RUN python setup.py install
 ENV PATH "$PATH:/root/Miniconda3/bin"
 

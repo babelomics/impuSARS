@@ -136,6 +136,6 @@ for seq in $sequences; do
 done
 
 echo >&2 "[ impuSARS ] Assigning lineage"
-conda run -n pangolin pangolin ${outpath}/${prefix}.impuSARS.sequence.fa -t ${threads} \
+conda run -n impusars pangolin ${outpath}/${prefix}.impuSARS.sequence.fa -t ${threads} \
       --outfile ${outpath}/${prefix}.impuSARS.lineage.csv &> /dev/null
 

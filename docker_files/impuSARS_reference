@@ -61,7 +61,7 @@ echo >&2 '
 echo "Converting FASTA input to VCF....."
 fastaname=`basename $inputFasta`
 sed "s/${unknn}/X/g" $inputFasta > $outPath/tmp.$fastaname
-conda run -n pangolin snp-sites -r -v -b -o $outPath/tmp.${refname}.vcf $outPath/tmp.$fastaname
+conda run -n impusars snp-sites -r -v -b -o $outPath/tmp.${refname}.vcf $outPath/tmp.$fastaname
 sed "s/^1/X/g" $outPath/tmp.${refname}.vcf | sed "s/contig=<ID=1/contig=<ID=X/g" \
         | sed 's/\.\t\.\tGT/PASS\t\.\tGT/g' > $outPath/tmp.${refname}.fixchrom.vcf
 bgzip $outPath/tmp.${refname}.fixchrom.vcf

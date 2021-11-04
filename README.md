@@ -16,20 +16,20 @@ This repository contains a novel tool called impuSARS to impute whole genome seq
 
 ## <a name="installation">Installation</a>
 
-impuSARS has two running modes: (i) Docker image or (ii) conda environment. In the first case, all you need is having Docker installed. For conda enviroment, you will need having conda and curl/wget installed (See [Dependencies](#dependencies) for details). In any case, impuSARS can be easily installed by running the following command:
+impuSARS has two installation modes: (i) Docker image or (ii) Conda environment. In the first case, all you need is having Docker installed. For conda environment, you will need having conda and curl/wget pre-installed (See [Dependencies](#dependencies) for details). In both cases, impuSARS can be easily installed by running the following command:
 
 ```
 git clone https://github.com/babelomics/impuSARS
 cd impuSARS
 ./install_impuSARS --mode <docker/conda>
 ```
-where `--mode` can take the values **docker** or **conda** depending on your preferences.
+where `--mode` can take the values **docker** or **conda** depending on your preferences. Docker mode will automatically build the impuSARS docker image whereas Conda mode will create a impuSARS conda environment with all dependencies installed.
 
 ## <a name="quickstart">Quick start</a>
 
 ### Docker mode
 
-An all-in script is available for Unix users. You can easily run imputation by executing the following command:
+An all-in script is available for Unix users. The script will initialize the docker container. Imputation can be run by executing the following command:
 
 ```
 ./impuSARS --infile /path/to/<file_fasta_or_vcf> \
@@ -64,7 +64,7 @@ where arguments are detailed above and, additionally:
 
 ### Conda mode
 
-Similarly to docker, users prefering conda installation can run impuSARS as:
+Similarly to docker, users prefering conda installation can run imputation from the conda environment as:
 
 ```
 conda activate impusars
@@ -72,9 +72,10 @@ impuSARS --infile /path/to/<file_fasta_or_vcf> \
          --outprefix <output_prefix> \
          [--reference <reference_fasta>]
          [--panel <panel_m3vcf>]
-         [--threads <num_threads>]           
+         [--threads <num_threads>] 
+conda deactivate          
 ```
-where arguments are equivalent to Docker mode.
+where arguments are equivalent to those in Docker mode.
 
 ## <a name="output">Output</a>
 
@@ -85,7 +86,7 @@ After imputation, impuSARS returns two files:
 
 ## <a name="output">Example</a>
 
-An easy example is provided for testing purposes. To run this example you can just run (after [Installation](#installation)):
+An easy example is provided for testing purposes. To test this example you can just run (after [Installation](#installation)):
 
 ```
 # Docker mode
@@ -94,7 +95,8 @@ An easy example is provided for testing purposes. To run this example you can ju
 # Conda mode
 conda activate impusars
 impuSARS --infile example/sequence.fa \
-         --outprefix imputation 
+         --outprefix imputation
+conda deactivate 
 ```
 
 The [example SARS-CoV-2 sequence](example/sequence.fa) has been internally sequenced and is available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therefore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).
@@ -104,12 +106,21 @@ The [example SARS-CoV-2 sequence](example/sequence.fa) has been internally seque
 impuSARS tool now includes another all-in script for users to create their own reference panel for SARS-CoV-2 or any other viral sequences to impute. Reference panels can be created as follows:
 
 ```
+# Docker mode
 ./impuSARS_reference --name <reference_prefix> \
                      --output_path <output_path> \
                      --input_fasta <input_fasta> \
                      --genome_fasta <reference_fasta> \
                      [--unknown_nn <unknown_nn>]
-                     [--threads <num_threads>]  
+                     [--threads <num_threads>] 
+# Conda mode
+conda ./impuSARS_reference --name <reference_prefix> \
+                     --output_path <output_path> \
+                     --input_fasta <input_fasta> \
+                     --genome_fasta <reference_fasta> \
+                     [--unknown_nn <unknown_nn>]
+                     [--threads <num_threads>]
+
 ```
 where:
  * **<output_path>**: Directory where the custom reference panel will be generated.

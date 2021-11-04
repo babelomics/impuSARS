@@ -114,13 +114,14 @@ impuSARS tool now includes another all-in script for users to create their own r
                      [--unknown_nn <unknown_nn>]
                      [--threads <num_threads>] 
 # Conda mode
-conda ./impuSARS_reference --name <reference_prefix> \
+conda activate impusars
+impuSARS_reference --name <reference_prefix> \
                      --output_path <output_path> \
                      --input_fasta <input_fasta> \
                      --genome_fasta <reference_fasta> \
                      [--unknown_nn <unknown_nn>]
                      [--threads <num_threads>]
-
+conda deactivate
 ```
 where:
  * **<output_path>**: Directory where the custom reference panel will be generated.

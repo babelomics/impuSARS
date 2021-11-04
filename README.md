@@ -88,8 +88,13 @@ After imputation, impuSARS returns two files:
 An easy example is provided for testing purposes. To run this example you can just run (after [Installation](#installation)):
 
 ```
+# Docker mode
 ./impuSARS --infile example/sequence.fa \
            --outprefix imputation 
+# Conda mode
+conda activate impusars
+impuSARS --infile example/sequence.fa \
+         --outprefix imputation 
 ```
 
 The [example SARS-CoV-2 sequence](example/sequence.fa) has been internally sequenced and is available under the ENA Accession [PRJEB43882](https://www.ebi.ac.uk/ena/browser/view/PRJEB43882) (see [Data](#data) for details). This sequence includes a high rate of missing regions (Ns). Therefore, impuSARS will return a completely imputed genome sequence (FASTA file) and its corresponding assigned lineage (CSV file).

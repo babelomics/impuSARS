@@ -2,6 +2,7 @@
 
 SCRIPT_PATH=`readlink -f $0`
 DIR_PATH=`dirname $SCRIPT_PATH`
+PATH=${DIR_PATH}:$PATH
 
 # Input arguments
 function parseArgs(){
@@ -39,30 +40,30 @@ if [[ $reference != *"SARS_CoV_2"* ]]; then
 	sed 's/[A-Za-z]/N/g' ${reference} | sed 's/>N/>X/g' > ${refN}
 fi
 
-cat $reference $infasta > /tmp/joined.fa
-muscle -in /tmp/joined.fa -out /tmp/aligned.fa -quiet
+cat $reference $infasta > $CONDA_PREFIX/tmp/joined.fa
+muscle -in $CONDA_PREFIX/tmp/joined.fa -out $CONDA_PREFIX/tmp/aligned.fa -quiet
 
 # Check if gaps in reference and fix
-gaps=`head -500 /tmp/aligned.fa | grep "-" | tr -d '\r\n'`
+gaps=`head -500 $CONDA_PREFIX/tmp/aligned.fa | grep "-" | tr -d '\r\n'`
 refline=1
 final=500
 if [[ "$gaps" == *"-"* ]]; then
-   mv /tmp/aligned.fa /tmp/prealigned.fa
-   fixFASTA.py --fasta /tmp/prealigned.fa --output /tmp/aligned.fa
-   refline=`grep -n ">X" /tmp/aligned.fa | cut -f1 -d':'`
+   mv $CONDA_PREFIX/tmp/aligned.fa $CONDA_PREFIX/tmp/prealigned.fa
+   fixFASTA.py --fasta $CONDA_PREFIX/tmp/prealigned.fa --output $CONDA_PREFIX/tmp/aligned.fa
+   refline=`grep -n ">X" $CONDA_PREFIX/tmp/aligned.fa | cut -f1 -d':'`
    final=$(( refline + 1 ))
 fi
 
 # Removing reference from alignment and masking
-sed --re "${refline},${final}d" /tmp/aligned.fa > /tmp/aligned_sequence.fa
-sed -i 's/-/N/g' /tmp/aligned_sequence.fa
+sed --re "${refline},${final}d" $CONDA_PREFIX/tmp/aligned.fa > $CONDA_PREFIX/tmp/aligned_sequence.fa
+sed -i 's/-/N/g' $CONDA_PREFIX/tmp/aligned_sequence.fa
 
 # Convert to VCF with reference to Ns
-FastaToVCF.py -r $refN /tmp/aligned_sequence.fa /tmp/aligned.vcf
-cat $headers /tmp/aligned.vcf | bgzip > /tmp/aligned.vcf.gz
-tabix /tmp/aligned.vcf.gz
+FastaToVCF.py -r $refN $CONDA_PREFIX/tmp/aligned_sequence.fa $CONDA_PREFIX/tmp/aligned.vcf
+cat $headers $CONDA_PREFIX/tmp/aligned.vcf | bgzip > $CONDA_PREFIX/tmp/aligned.vcf.gz
+tabix $CONDA_PREFIX/tmp/aligned.vcf.gz
 
 # Fix reference to real reference once Ns have been discarded
-bcftools norm --check-ref s -f $reference /tmp/aligned.vcf.gz \
+bcftools norm --check-ref s -f $reference $CONDA_PREFIX/tmp/aligned.vcf.gz \
      -Oz -o $outvcf
 tabix $outvcf

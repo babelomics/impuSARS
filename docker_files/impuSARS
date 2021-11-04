@@ -2,6 +2,7 @@
 
 SCRIPT_PATH=`readlink -f $0`
 DIR_PATH=`dirname $SCRIPT_PATH`
+PATH=${DIR_PATH}:$PATH
 
 # Input arguments
 function parseArgs(){
@@ -53,7 +54,7 @@ function parseArgs(){
 
 parseArgs $@
 
-version="v1.0"
+version="v3.1"
 verref="v3.0"
 
 # Print version
@@ -79,7 +80,7 @@ if [[ $infile == *"vcf"* ]]; then
 elif [[ $infile == *".fa"*  ]]; then
 
    echo >&2 "[ impuSARS ] Preprocessing FASTA file"
-   vcffile="/tmp/converted.vcf.gz"
+   vcffile="$CONDA_PREFIX/tmp/converted.vcf.gz"
    fasta2vcf --infasta $infile --outvcf $vcffile --reference ${reference}
 
 else
@@ -93,44 +94,44 @@ prevcf="${prefix}.vcf.gz"
 
 echo >&2 "[ impuSARS ] Preparing input for imputation"
 header=`bcftools view -H $vcffile | head -1 | cut -f1`
-bcftools view $vcffile | sed "s/^${header}/X/g" | bcftools view -Oz -o /tmp/$prevcf &> /dev/null
-tabix /tmp/$prevcf
+bcftools view $vcffile | sed "s/^${header}/X/g" | bcftools view -Oz -o $CONDA_PREFIX/tmp/$prevcf &> /dev/null
+tabix $CONDA_PREFIX/tmp/$prevcf
 
 echo >&2 "[ impuSARS ] Imputing missing variants"
 minimac4  --cpus ${threads} --refHaps ${panel} \
-          --haps /tmp/$prevcf --minRatio 0.00001 --log --prefix /tmp/${prefix} &> /dev/null
-if error=`grep -1 "ERROR" /tmp/${prefix}.logfile`; then
+          --haps $CONDA_PREFIX/tmp/$prevcf --minRatio 0.00001 --log --prefix $CONDA_PREFIX/tmp/${prefix} &> /dev/null
+if error=`grep -1 "ERROR" $CONDA_PREFIX/tmp/${prefix}.logfile`; then
    echo >&2 $error
    echo >&2 "Note: Target does not cover enough genome to get an accurate imputation."
    exit 1
 fi
-tabix /tmp/${prefix}.dose.vcf.gz
+tabix $CONDA_PREFIX/tmp/${prefix}.dose.vcf.gz
 
 echo >&2 "[ impuSARS ] Joining imputed variants with input"
-bcftools view /tmp/${prefix}.dose.vcf.gz | grep -v TYPED | \
-    bcftools view -Oz -o /tmp/${prefix}.dose.onlyImputed.vcf.gz
-tabix /tmp/${prefix}.dose.onlyImputed.vcf.gz
+bcftools view $CONDA_PREFIX/tmp/${prefix}.dose.vcf.gz | grep -v TYPED | \
+    bcftools view -Oz -o $CONDA_PREFIX/tmp/${prefix}.dose.onlyImputed.vcf.gz
+tabix $CONDA_PREFIX/tmp/${prefix}.dose.onlyImputed.vcf.gz
 
-bcftools concat /tmp/$prevcf /tmp/${prefix}.dose.onlyImputed.vcf.gz | \
-    bcftools sort -Oz -o /tmp/${prefix}.dose.joined.vcf.gz
-tabix /tmp/${prefix}.dose.joined.vcf.gz
+bcftools concat $CONDA_PREFIX/tmp/$prevcf $CONDA_PREFIX/tmp/${prefix}.dose.onlyImputed.vcf.gz | \
+    bcftools sort -Oz -o $CONDA_PREFIX/tmp/${prefix}.dose.joined.vcf.gz
+tabix $CONDA_PREFIX/tmp/${prefix}.dose.joined.vcf.gz
 
 echo >&2 "[ impuSARS ] Postprocessing imputation results"
-bcftools norm -m +both /tmp/${prefix}.dose.joined.vcf.gz | \
+bcftools norm -m +both $CONDA_PREFIX/tmp/${prefix}.dose.joined.vcf.gz | \
      bcftools norm --check-ref s -f ${reference} | \
-     bcftools view -c1 -Oz -o /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
-tabix /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
+     bcftools view -c1 -Oz -o $CONDA_PREFIX/tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
+tabix $CONDA_PREFIX/tmp/${prefix}.dose.multiallelic.fixref.vcf.gz
 
 echo >&2 "[ impuSARS ] Calculating consensus sequence"
-sequences=`bcftools view -h /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | grep CHROM | cut -f10- | tr -s '\t' '\n'`
+sequences=`bcftools view -h $CONDA_PREFIX/tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | grep CHROM | cut -f10- | tr -s '\t' '\n'`
 for seq in $sequences; do
-   bcftools consensus -s $seq -f ${reference} /tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | \
-       sed "s/>X/>$seq/g" >> /tmp/${prefix}.imputed.consensus.fa
+   bcftools consensus -s $seq -f ${reference} $CONDA_PREFIX/tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | \
+       sed "s/>X/>$seq/g" >> $CONDA_PREFIX/tmp/${prefix}.imputed.consensus.fa
 
    # Reformat consensus to keep known sequence from input
-   cat $infile /tmp/${prefix}.imputed.consensus.fa > /tmp/${prefix}.joined.consensus.fa
-   muscle -in /tmp/${prefix}.joined.consensus.fa -out /tmp/${prefix}.aligned.consensus.fa -quiet
-   fixFASTA.py --fasta /tmp/${prefix}.aligned.consensus.fa \
+   cat $infile $CONDA_PREFIX/tmp/${prefix}.imputed.consensus.fa > $CONDA_PREFIX/tmp/${prefix}.joined.consensus.fa
+   muscle -in $CONDA_PREFIX/tmp/${prefix}.joined.consensus.fa -out $CONDA_PREFIX/tmp/${prefix}.aligned.consensus.fa -quiet
+   fixFASTA.py --fasta $CONDA_PREFIX/tmp/${prefix}.aligned.consensus.fa \
                --output ${outpath}/${prefix}.impuSARS.sequence.fa \
                --mode consensus
 done

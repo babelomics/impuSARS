@@ -3,7 +3,7 @@
 SCRIPT_PATH=`readlink -f $0`
 DIR_PATH=`dirname $SCRIPT_PATH`
 PATH=${DIR_PATH}:$PATH
-mkdir $CONDA_PREFIX/tmp/
+mkdir -p $CONDA_PREFIX/tmp/
 
 # Input arguments
 function parseArgs(){

@@ -179,8 +179,9 @@ If you use impuSARS, please cite our publication:
 ## <a name="versionhistory">Version history</a>
 
  * V1.0 (2021-03-13): First release
- * V2.0 (2021-06-17): Update reference (v2.1) and pangolin (v3.1.3).
- * V3.0 (2021-10-07): Update reference (v3.0) and pangolin (v3.1.14). Indels imputation is now included by the new reference.
+ * V2.0 (2021-06-17): Update reference panel (v2.1) and pangolin (v3.1.3).
+ * V3.0 (2021-10-07): Update reference panel (v3.0) and pangolin (v3.1.14). Indels imputation is now included by the new reference.
  * V3.1 (2021-11-10): impuSARS is now supported from a conda environment.
+ * V4.0 (2022-06-17): Update reference panel (v4.0) and pangolin (v4.0.6)
 
 For additional version details, please go to [Releases](https://github.com/babelomics/impuSARS/releases).

@@ -33,7 +33,7 @@ function parseArgs(){
       "--panel")
        shift
        panel=$1
-       ;;              
+       ;;
       "--threads")
        shift
        threads=$1
@@ -42,7 +42,7 @@ function parseArgs(){
        shift
        showver="true"
        #echo '->'$threads
-       ;;  
+       ;;
       *)
        echo 'Unknown argument '$1
        shift
@@ -55,8 +55,8 @@ function parseArgs(){
 
 parseArgs $@
 
-version="v3.1"
-verref="v3.0"
+version="v4.0"
+verref="v4.0"
 
 # Print version
 if [[ "$showver" == "true" ]]; then

@@ -11,7 +11,7 @@ function parseArgs(){
   threads=1
   prefix="sars-cov-2"
   reference="$DIR_PATH/references/SARS_CoV_2_REFERENCE.v1.0.fasta"
-  panel="$DIR_PATH/references/SARS_CoV_2_IMPUTATION_PANEL.v3.0.m3vcf.gz"
+  panel="$DIR_PATH/references/SARS_CoV_2_IMPUTATION_PANEL.v4.0.m3vcf.gz"
   showver="false"
 
   arg=$1
@@ -127,7 +127,7 @@ echo >&2 "[ impuSARS ] Calculating consensus sequence"
 sequences=`bcftools view -h $CONDA_PREFIX/tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | grep CHROM | cut -f10- | tr -s '\t' '\n'`
 for seq in $sequences; do
    bcftools consensus -s $seq -f ${reference} $CONDA_PREFIX/tmp/${prefix}.dose.multiallelic.fixref.vcf.gz | \
-       sed "s/>X/>$seq/g" >> $CONDA_PREFIX/tmp/${prefix}.imputed.consensus.fa
+       sed "s/>X/>${seq//\//\\/}/g" >> $CONDA_PREFIX/tmp/${prefix}.imputed.consensus.fa
 
    # Reformat consensus to keep known sequence from input
    cat $infile $CONDA_PREFIX/tmp/${prefix}.imputed.consensus.fa > $CONDA_PREFIX/tmp/${prefix}.joined.consensus.fa

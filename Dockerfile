@@ -1,14 +1,18 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
-RUN apt-get update && apt-get install -y \
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Madrid
+
+RUN apt-get update \
+    && apt install -y \
     build-essential \
     curl \
     cmake \
     git \
     help2man \
     lsb-release \
-    python \
-    python-pip \
+    python3 \
+    python3-pip \
     rpm \
     zlib1g-dev \
     libbz2-dev \
@@ -41,6 +45,7 @@ ADD https://codeload.github.com/statgen/Minimac4/tar.gz/refs/tags/v1.0.2 Minimac
 RUN tar xvzf Minimac4-1.0.2.tar.gz
 RUN mv Minimac4-1.0.2 Minimac4
 WORKDIR "/Minimac4"
+RUN sed -i 's/zlib/#zlib/g' requirements.txt
 RUN bash install.sh
 RUN curl ftp://share.sph.umich.edu/minimac3/Minimac3Executable.tar.gz -o Minimac3Executable.tar.gz
 RUN tar xvzf Minimac3Executable.tar.gz
@@ -67,9 +72,9 @@ RUN mkdir /root/.conda \
 ENV PATH "$PATH:/root/miniconda3/bin"
 RUN conda init bash
 
-ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v4.0.6.tar.gz pangolin.tar.gz
+ADD https://github.com/cov-lineages/pangolin/archive/refs/tags/v4.1.3.tar.gz pangolin.tar.gz
 RUN tar xvzf pangolin.tar.gz
-WORKDIR "/pangolin-4.0.6"
+WORKDIR "/pangolin-4.1.3"
 RUN sed -i "s/name: pangolin/name: impusars/g" environment.yml
 RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "impusars", "/bin/bash", "-c"]

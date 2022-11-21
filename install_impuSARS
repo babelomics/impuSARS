@@ -32,7 +32,7 @@ if [[ "$mode" == "docker" ]]; then
 	# Build docker if not available
 	if [[ "$(docker images -q impusars 2> /dev/null)" == "" ]]; then
 	  echo >&2 "[ impuSARS ] Building impuSARS Docker image..."
-	  docker build -t impusars .
+	  docker build --no-cache -t impusars . 
 	else
 	  echo >&2 "[ impuSARS ] impuSARS Docker image has been found locally."
 	  echo >&2 "[ impuSARS ] For updates, please remove previous version as follows:"

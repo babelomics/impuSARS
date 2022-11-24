@@ -90,7 +90,7 @@ bcftools norm -m -any $outPath/tmp.${refname}.fixref.vcf.gz | \
          bcftools view -i 'ALT="A,C,T,G,*"' -Oz -o $outPath/tmp.${refname}.norm.onlyTCGAdel.vcf.gz
 
 # Remove unique variants
-echo "Normalizing to reference....."
+echo "Removing unique vaiants....."
 bcftools view -t ^X:1-1 -i 'N_PASS(GT="A")>1' $outPath/tmp.${refname}.norm.onlyTCGAdel.vcf.gz \
          -Oz -o $outPath/tmp.${refname}.norm.onlyTCGAdel.nonunique.vcf.gz
 

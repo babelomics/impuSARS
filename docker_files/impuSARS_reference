@@ -99,8 +99,8 @@ mv $outPath/tmp.${refname}.norm.onlyTCGAdel.nonunique.vcf.gz $outPath/${refname}
 # Add previous reference in REF and ALT columns for indels
 echo "Fixing indels....."
 gunzip $outPath/${refname}.reference.vcf.gz
-fixvcf.py -f ${genomeFasta} $outPath/${refname}.reference.vcf | \
-    bcftools sort -Oz -o $outPath/tmp.${refname}.vcf.gz
+conda run -n impusars fixvcf.py -f ${genomeFasta} $outPath/${refname}.reference.vcf | \
+                      bcftools sort -Oz -o $outPath/tmp.${refname}.vcf.gz
 rm $outPath/${refname}.reference.vcf 
 
 # Create M3VCF reference with hyperparameters estimation

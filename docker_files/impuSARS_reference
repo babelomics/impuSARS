@@ -100,7 +100,7 @@ mv $outPath/tmp.${refname}.norm.onlyTCGAdel.nonunique.vcf.gz $outPath/${refname}
 echo "Fixing indels....."
 gunzip $outPath/${refname}.reference.vcf.gz
 conda run -n impusars fixvcf.py -f ${genomeFasta} $outPath/${refname}.reference.vcf | \
-                      bcftools sort -Oz -o $outPath/tmp.${refname}.vcf.gz
+                      grep . | bcftools sort -Oz -o $outPath/tmp.${refname}.vcf.gz
 rm $outPath/${refname}.reference.vcf 
 
 # Create M3VCF reference with hyperparameters estimation

@@ -64,7 +64,14 @@ ENV PATH "$PATH:/Minimac4/release-build/"
 ENV PATH "$PATH:/Minimac4/Minimac3Executable/bin/"
 
 WORKDIR "/"
-ADD https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh Miniconda3.sh
+
+RUN ARCH=`uname -m`; \
+    if [ "$ARCH" = "x86_64" ]; then \
+       curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o Miniconda3.sh; \
+    else \
+       curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh -o Miniconda3.sh; \
+    fi
+
 RUN chmod 755 Miniconda3.sh
 RUN mkdir /root/.conda \
     && bash Miniconda3.sh -b \
